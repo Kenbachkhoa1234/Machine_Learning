@@ -3,672 +3,413 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PhishGuard // URL Defense-in-Depth Inspector</title>
+  <title>URL Security Checker</title>
   <style>
     :root {
-      --bg: #070b14;
-      --bg-panel: #0d1526;
-      --bg-panel-2: #121d33;
-      --border: #1e2d4a;
-      --text: #e6eefc;
+      --bg: #070c18;
+      --card: #0f1729;
+      --card-2: #131e35;
+      --border: #1e2e4d;
+      --text: #eaf1ff;
       --muted: #8ea3c7;
-      --accent: #38bdf8;
+      --accent: #0ea5e9;
       --safe: #10b981;
-      --safe-bg: rgba(16, 185, 129, 0.12);
-      --warn: #f59e0b;
-      --warn-bg: rgba(245, 158, 11, 0.12);
+      --safe-bg: rgba(16, 185, 129, 0.11);
       --danger: #ef4444;
-      --danger-bg: rgba(239, 68, 68, 0.14);
+      --danger-bg: rgba(239, 68, 68, 0.12);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: var(--sans);
-      background:
-        radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.08), transparent 35%),
-        radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.06), transparent 30%),
-        var(--bg);
-      color: var(--text);
       min-height: 100vh;
-      line-height: 1.5;
+      padding: 36px 16px 64px;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(14, 165, 233, 0.09), transparent 35%),
+        radial-gradient(circle at 80% 85%, rgba(16, 185, 129, 0.05), transparent 35%),
+        var(--bg);
     }
 
-    .container {
-      max-width: 1120px;
+    .wrapper {
+      width: 100%;
+      max-width: 780px;
       margin: 0 auto;
-      padding: 24px 20px 64px;
     }
 
-    /* Topbar */
-    .topbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 24px;
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .brand-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #0ea5e9, #10b981);
+
+    .shield {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 14px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0284c7, #10b981);
       display: grid;
       place-items: center;
-      font-size: 20px;
-      box-shadow: 0 0 24px rgba(14, 165, 233, 0.25);
+      font-size: 24px;
+      box-shadow: 0 8px 28px rgba(14, 165, 233, 0.25);
     }
-    .brand h1 {
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 1.7rem;
+      letter-spacing: -0.01em;
+    }
+
+    .header p {
       margin: 0;
-      font-size: 1.15rem;
-      letter-spacing: 0.04em;
-    }
-    .brand p {
-      margin: 2px 0 0;
-      font-size: 0.82rem;
       color: var(--muted);
+      font-size: 0.94rem;
     }
-    .topbar-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 0.8rem;
+
+    .card {
+      background: var(--card);
       border: 1px solid var(--border);
-      background: var(--bg-panel);
-      color: var(--muted);
-    }
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--safe);
-      box-shadow: 0 0 8px var(--safe);
-    }
-    .dot.err {
-      background: var(--danger);
-      box-shadow: 0 0 8px var(--danger);
-    }
-
-    button {
-      cursor: pointer;
-      font-family: inherit;
-      border: none;
-      transition: transform 0.12s ease, opacity 0.15s ease, border-color 0.15s ease;
-    }
-    button:active { transform: scale(0.98); }
-
-    .btn-soc {
-      padding: 8px 14px;
-      border-radius: 8px;
-      background: var(--bg-panel-2);
-      color: var(--text);
-      border: 1px solid var(--border);
-      font-size: 0.84rem;
-      font-weight: 600;
-    }
-    .btn-soc.unlocked {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(56, 189, 248, 0.1);
-    }
-    .btn-logout {
-      padding: 8px 12px;
-      border-radius: 8px;
-      background: rgba(239, 68, 68, 0.12);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      font-size: 0.82rem;
-    }
-
-    /* Alert Banner */
-    .alert-banner {
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin-bottom: 18px;
-      font-size: 0.9rem;
-      border: 1px solid rgba(239, 68, 68, 0.45);
-      background: var(--danger-bg);
-      color: #fecaca;
-    }
-
-    /* Scanner Card */
-    .panel {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
       margin-bottom: 20px;
     }
-    .scan-form {
+
+    .input-row {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
-    .url-input {
+
+    .url-box {
       flex: 1 1 360px;
       padding: 14px 16px;
       border-radius: 10px;
       border: 1px solid var(--border);
-      background: #060a12;
+      background: #060a14;
       color: var(--text);
       font-family: var(--mono);
-      font-size: 0.96rem;
+      font-size: 0.93rem;
       outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
-    .url-input:focus {
+
+    .url-box:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.16);
     }
-    .btn-primary {
+
+    .btn-check {
       padding: 14px 24px;
       border-radius: 10px;
+      border: none;
       background: linear-gradient(135deg, #0284c7, #0ea5e9);
       color: #fff;
-      font-weight: 700;
+      font-family: inherit;
       font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
     }
-    .btn-primary:hover { opacity: 0.92; }
 
-    .scan-options {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 12px;
-      font-size: 0.84rem;
-      color: var(--muted);
-    }
-    .checkbox-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+    .btn-check:hover { opacity: 0.92; }
+    .btn-check:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-ghost {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-2);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
       cursor: pointer;
     }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
 
-    /* Presets */
-    .presets {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px dashed var(--border);
-      align-items: center;
-    }
-    .presets-label {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-right: 4px;
-    }
-    .preset-btn {
-      padding: 6px 11px;
-      border-radius: 7px;
-      font-size: 0.78rem;
-      background: var(--bg-panel-2);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .preset-btn:hover { border-color: var(--accent); }
-
-    /* End-User Verdict Card */
-    .verdict-card {
-      border-radius: 14px;
+    .result {
+      margin-top: 20px;
       padding: 20px;
+      border-radius: 13px;
       border: 1px solid var(--border);
-      margin-bottom: 20px;
+      animation: fadeIn 0.2s ease;
     }
-    .verdict-card.SAFE { background: var(--safe-bg); border-color: rgba(16, 185, 129, 0.45); }
-    .verdict-card.SUSPICIOUS { background: var(--warn-bg); border-color: rgba(245, 158, 11, 0.5); }
-    .verdict-card.PHISHING { background: var(--danger-bg); border-color: rgba(239, 68, 68, 0.55); }
 
-    .verdict-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+    .result.LEGITIMATE {
+      background: var(--safe-bg);
+      border-color: rgba(16, 185, 129, 0.45);
     }
-    .verdict-badge {
-      display: inline-flex;
+
+    .result.PHISHING {
+      background: var(--danger-bg);
+      border-color: rgba(239, 68, 68, 0.5);
+    }
+
+    .result.ERROR {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .badge-group {
+      display: flex;
       align-items: center;
       gap: 8px;
-      padding: 5px 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 11px;
       border-radius: 999px;
+      font-size: 0.76rem;
       font-weight: 800;
-      font-size: 0.82rem;
       letter-spacing: 0.05em;
     }
-    .SAFE .verdict-badge { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; }
-    .SUSPICIOUS .verdict-badge { background: rgba(245, 158, 11, 0.25); color: #fcd34d; }
-    .PHISHING .verdict-badge { background: rgba(239, 68, 68, 0.28); color: #fca5a5; }
 
-    .verdict-title {
-      margin: 10px 0 6px;
-      font-size: 1.25rem;
-      font-weight: 800;
+    .LEGITIMATE .badge {
+      background: rgba(16, 185, 129, 0.22);
+      color: #6ee7b7;
     }
-    .verdict-advice {
+
+    .PHISHING .badge {
+      background: rgba(239, 68, 68, 0.26);
+      color: #fca5a5;
+    }
+
+    .storage-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: rgba(15, 23, 41, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--muted);
+    }
+
+    .result h2 {
+      margin: 0 0 6px;
+      font-size: 1.18rem;
+    }
+
+    .result .advice {
       margin: 0;
       color: var(--text);
-      font-size: 0.95rem;
-    }
-    .idn-alert {
-      margin-top: 12px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      background: rgba(0, 0, 0, 0.28);
-      border-left: 3px solid var(--warn);
-      font-size: 0.88rem;
+      font-size: 0.92rem;
+      line-height: 1.5;
     }
 
-    .meta-strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 0.8rem;
+    /* Highlighted Domain Display */
+    .domain-spotlight {
+      margin-top: 14px;
+      padding: 10px 13px;
+      border-radius: 9px;
+      background: rgba(6, 10, 20, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
     }
-    .meta-item span {
+
+    .flagged-char {
+      display: inline-block;
+      padding: 0 4px;
+      margin: 0 1px;
+      border-radius: 4px;
+      background: rgba(239, 68, 68, 0.32);
+      border: 1px solid #ef4444;
+      color: #fecaca;
+      font-weight: 800;
+    }
+
+    /* Reasons Box */
+    .reasons-box {
+      margin-top: 14px;
+      padding: 12px 15px;
+      border-radius: 10px;
+      background: rgba(6, 10, 20, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .reasons-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .reasons-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .reasons-list li { margin-bottom: 4px; }
+
+    /* Fingerprint Footer */
+    .fingerprint-grid {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      font-size: 0.78rem;
+    }
+
+    .fp-item span {
       display: block;
       color: var(--muted);
-      font-size: 0.74rem;
+      font-size: 0.72rem;
+      margin-bottom: 2px;
     }
-    .meta-item code {
+
+    .fp-item code {
       font-family: var(--mono);
       color: var(--text);
       word-break: break-all;
     }
-    .anti-evasion-note {
-      margin-top: 12px;
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
 
-    /* SOC Tabs */
-    .soc-workspace { margin-top: 24px; }
-    .tabs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-    .tab-btn {
-      padding: 10px 16px;
-      border-radius: 9px;
-      background: var(--bg-panel);
-      color: var(--muted);
-      border: 1px solid var(--border);
-      font-weight: 600;
-      font-size: 0.88rem;
-    }
-    .tab-btn.active {
-      background: rgba(56, 189, 248, 0.14);
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    .subpanel {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-    }
-    .subpanel h3 {
-      margin: 0 0 12px;
-      font-size: 0.96rem;
-      color: var(--accent);
+    /* Saved History Panel */
+    .history-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    /* Character X-Ray */
-    .xray-stream {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      padding: 12px;
-      border-radius: 10px;
-      background: #050811;
-      border: 1px solid var(--border);
       margin-bottom: 12px;
     }
-    .char-box {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 30px;
-      padding: 4px 6px;
-      border-radius: 6px;
-      background: var(--bg-panel-2);
-      border: 1px solid var(--border);
-      font-family: var(--mono);
-    }
-    .char-box .ch { font-size: 1.05rem; font-weight: 700; }
-    .char-box .cp { font-size: 0.62rem; color: var(--muted); }
-    .char-box.flagged {
-      background: rgba(239, 68, 68, 0.22);
-      border-color: #ef4444;
-      color: #fecaca;
-      box-shadow: 0 0 14px rgba(239, 68, 68, 0.35);
-    }
-    .char-box.flagged .cp { color: #fca5a5; }
 
-    /* Progress bar */
-    .prob-bar-wrap {
-      height: 12px;
-      border-radius: 999px;
-      background: #060a12;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      position: relative;
-      margin: 10px 0;
+    .history-header h3 {
+      margin: 0;
+      font-size: 0.98rem;
     }
-    .prob-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #10b981, #f59e0b 55%, #ef4444);
-      transition: width 0.3s ease;
-    }
-    .kv-list { display: grid; gap: 6px; font-size: 0.85rem; }
-    .kv-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 5px 0;
-      border-bottom: 1px dashed rgba(30, 45, 74, 0.7);
-    }
-    .kv-row span:first-child { color: var(--muted); }
-    .kv-row code { font-family: var(--mono); word-break: break-all; }
 
-    /* Anatomy */
-    .anatomy-grid {
+    .history-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
-    }
-    .anatomy-cell {
-      background: var(--bg-panel-2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 9px 11px;
-    }
-    .anatomy-cell label {
-      display: block;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 3px;
-    }
-    .anatomy-cell code {
-      font-family: var(--mono);
-      font-size: 0.84rem;
-      word-break: break-all;
-    }
-
-    /* Findings */
-    .finding-item {
-      padding: 10px 12px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      border-left: 3px solid var(--border);
-      background: var(--bg-panel-2);
-      font-size: 0.86rem;
-    }
-    .finding-item.critical { border-left-color: var(--danger); }
-    .finding-item.warning { border-left-color: var(--warn); }
-    .finding-item.info { border-left-color: var(--accent); }
-    .finding-item.ok { border-left-color: var(--safe); }
-
-    /* Feature table */
-    .feat-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
       gap: 8px;
     }
-    .feat-chip {
+
+    .history-row {
       display: flex;
       justify-content: space-between;
-      padding: 7px 10px;
-      border-radius: 7px;
-      background: var(--bg-panel-2);
-      border: 1px solid var(--border);
-      font-size: 0.8rem;
-      font-family: var(--mono);
-    }
-
-    /* Tables */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.82rem;
-    }
-    th, td {
-      text-align: left;
-      padding: 9px 10px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-    }
-    th { color: var(--muted); font-weight: 600; }
-    td code { font-family: var(--mono); }
-
-    /* Modal */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(3, 6, 12, 0.78);
-      display: grid;
-      place-items: center;
-      z-index: 50;
-      padding: 16px;
-    }
-    .modal {
-      width: 100%;
-      max-width: 420px;
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px;
-    }
-    .modal h2 { margin: 0 0 6px; font-size: 1.1rem; }
-    .modal p { margin: 0 0 14px; font-size: 0.85rem; color: var(--muted); }
-    .hidden { display: none !important; }
-
-    textarea {
-      width: 100%;
-      min-height: 110px;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #060a12;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 0.85rem;
-    }
-    .slider-row {
-      display: flex;
       align-items: center;
       gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-      font-size: 0.86rem;
+      padding: 10px 13px;
+      border-radius: 10px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.15s ease;
     }
-    input[type="range"] { flex: 1 1 200px; accent-color: var(--accent); }
+
+    .history-row:hover { border-color: var(--accent); }
+
+    .history-left {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .history-target {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-hash {
+      font-family: var(--mono);
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .mini-tag {
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .mini-tag.LEGITIMATE {
+      background: rgba(16, 185, 129, 0.18);
+      color: #6ee7b7;
+    }
+
+    .mini-tag.PHISHING {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+
+    .hidden { display: none !important; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-icon">🛡️</div>
-        <div>
-          <h1>PHISHGUARD // URL DEFENSE INSPECTOR</h1>
-          <p>Layer 1: IDN Homograph Guard · Layer 2: Random Forest (27 Features) · SHA-256 Threat Cache</p>
-        </div>
-      </div>
-      <div class="topbar-actions">
-        <span class="pill" id="modelStatusPill">
-          <span class="dot" id="modelDot"></span>
-          <span id="modelStatusText">Đang kiểm tra model...</span>
-        </span>
-        <button class="btn-soc" id="socToggleBtn" onclick="openSocModal()">🔒 SOC Analyst Mode</button>
-        <button class="btn-logout hidden" id="socLogoutBtn" onclick="logoutSoc()">Đăng xuất SOC</button>
-      </div>
-    </header>
-
-    <div id="modelMissingAlert" class="alert-banner hidden"></div>
-
-    <!-- Main Scanner -->
-    <section class="panel">
-      <form class="scan-form" onsubmit="handleScan(event)">
-        <input
-          id="urlInput"
-          class="url-input"
-          type="text"
-          placeholder="Dán URL cần kiểm tra (ví dụ: https://www.google.com hoặc https://www.gοοgle.com)..."
-          required
-        />
-        <button class="btn-primary" type="submit" id="scanBtn">Quét URL</button>
-      </form>
-
-      <div class="scan-options">
-        <label class="checkbox-label">
-          <input type="checkbox" id="forceRescan" />
-          <span>Bỏ qua cache, quét lại từ đầu (Force Re-scan)</span>
-        </label>
-        <span id="rateLimitInfo">Rate limit: sẵn sàng</span>
-      </div>
-
-      <div class="presets">
-        <span class="presets-label">Demo nhanh:</span>
-        <button type="button" class="preset-btn" onclick="runPreset('https://www.google.com')">🟢 Legit chuẩn</button>
-        <button type="button" class="preset-btn" onclick="runPreset('http://192.168.1.1/secure-login/verify-account.php?id=9981')">🔴 Phishing cổ điển (IP)</button>
-        <button type="button" class="preset-btn" onclick="runPreset('https://www.g\u03bf\u03bfgle.com/login')">🔴 Homograph Hy Lạp (gοοgle)</button>
-        <button type="button" class="preset-btn" onclick="runPreset('https://www.\u0440\u0430\u0443\u0440\u0430\u04cf.com')">🔴 Homograph Cyrillic (paypal)</button>
-        <button type="button" class="preset-btn" onclick="runPreset('https://www.xn--ggle-0qa0a.com/login')">🔴 Punycode thô (xn--)</button>
-        <button type="button" class="preset-btn" onclick="runPreset('https://github.com/scikit-learn/scikit-learn')">🟡 Test Dataset Bias</button>
-      </div>
-    </section>
-
-    <!-- End-User Verdict Card -->
-    <section id="verdictSection" class="hidden"></section>
-
-    <!-- Protected SOC Workspace (Rendered only when server authenticates SOC token) -->
-    <section id="socWorkspace" class="soc-workspace hidden">
-      <div class="tabs">
-        <button class="tab-btn active" id="tabXrayBtn" onclick="switchSocTab('xray')">🔬 X-Ray & Phân tích 2 lớp</button>
-        <button class="tab-btn" id="tabBatchBtn" onclick="switchSocTab('batch')">📂 Quét hàng loạt (Batch / CSV)</button>
-        <button class="tab-btn" id="tabLogsBtn" onclick="switchSocTab('logs')">🗄️ Threat Intel Log (SHA-256)</button>
-      </div>
-
-      <!-- Tab 1: X-Ray -->
-      <div id="socTabXray">
-        <div class="subpanel" style="margin-bottom: 16px;">
-          <div class="slider-row">
-            <strong>Ngưỡng quyết định ML (Decision Threshold):</strong>
-            <input type="range" id="thresholdSlider" min="0.10" max="0.90" step="0.05" value="0.50" oninput="onThresholdChange(this.value)" />
-            <code id="thresholdVal">0.50</code>
-            <span style="color: var(--muted); font-size: 0.78rem;">(Giảm ngưỡng = bắt gắt hơn, giảm FN; Tăng ngưỡng = giảm báo nhầm FP)</span>
-          </div>
-          <div id="socEmptyHint" style="color: var(--muted); font-size: 0.88rem;">
-            Hãy dán URL và bấm <strong>Quét URL</strong> (hoặc chọn 1 nút Demo nhanh) để xem phân tích X-Ray chi tiết.
-          </div>
-          <div id="socInspectContent" class="hidden"></div>
-        </div>
-      </div>
-
-      <!-- Tab 2: Batch -->
-      <div id="socTabBatch" class="hidden">
-        <div class="subpanel">
-          <h3>Quét danh sách URL / Upload CSV (tối đa 200 URL)</h3>
-          <textarea id="batchUrlsInput" placeholder="Mỗi dòng 1 URL...&#10;https://www.google.com&#10;https://www.gοοgle.com/login&#10;http://192.168.1.1/verify"></textarea>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; align-items:center;">
-            <button class="btn-primary" type="button" onclick="runBatchText()">Quét danh sách</button>
-            <input type="file" id="batchCsvFile" accept=".csv" />
-            <button class="btn-soc" type="button" onclick="runBatchCsv()">Quét file CSV</button>
-            <button class="btn-soc hidden" id="downloadBatchCsvBtn" type="button" onclick="downloadBatchCsv()">⬇️ Tải báo cáo CSV</button>
-          </div>
-          <div id="batchResultsArea" style="margin-top:16px;"></div>
-        </div>
-      </div>
-
-      <!-- Tab 3: Audit Log -->
-      <div id="socTabLogs" class="hidden">
-        <div class="subpanel">
-          <h3>
-            <span>SQLite Threat Cache & SHA-256 Audit Log</span>
-            <button class="btn-soc" type="button" onclick="loadThreatLogs()">🔄 Làm mới</button>
-          </h3>
-          <p style="font-size: 0.82rem; color: var(--muted); margin-top: 0;">
-            Hệ thống chỉ lưu <code>SHA-256(canonical_url)</code> và hostname (không lưu query string chứa token/mật khẩu của người dùng).
-          </p>
-          <div id="logsTableArea" style="overflow-x:auto;"></div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- SOC Login Modal -->
-  <div id="socModal" class="modal-backdrop hidden">
-    <div class="modal">
-      <h2>🔐 Xác thực SOC Analyst</h2>
-      <p>
-        Chế độ End-User ẩn toàn bộ 27 features & ngưỡng để chống attacker dò tìm (Anti-Evasion).
-        Nhập SOC Access Key để mở khóa phân tích nội bộ (sai 3 lần sẽ tạm khóa 60s).
-      </p>
-      <form onsubmit="submitSocAuth(event)">
-        <input
-          id="socKeyInput"
-          class="url-input"
-          type="password"
-          style="width:100%; margin-bottom:12px;"
-          placeholder="Nhập SOC Access Key..."
-          required
-        />
-        <div id="socAuthError" style="color:#fca5a5; font-size:0.83rem; margin-bottom:10px;" class="hidden"></div>
-        <div style="display:flex; gap:8px; justify-content:flex-end;">
-          <button type="button" class="btn-soc" onclick="closeSocModal()">Hủy</button>
-          <button type="submit" class="btn-primary" style="padding:10px 18px;">Mở khóa</button>
-        </div>
-      </form>
+  <main class="wrapper">
+    <div class="header">
+      <div class="shield">🛡️</div>
+      <h1>URL Security Checker</h1>
+      <p>Kiểm tra mức độ an toàn đường dẫn hoặc tra cứu báo cáo đã lưu bằng mã băm SHA-256</p>
     </div>
-  </div>
+
+    <section class="card">
+      <form class="input-row" onsubmit="onSubmitUrl(event)">
+        <input
+          id="urlField"
+          class="url-box"
+          type="text"
+          placeholder="Dán URL (https://...) hoặc mã SHA-256..."
+          autocomplete="off"
+          spellcheck="false"
+          required
+        />
+        <button id="submitBtn" class="btn-check" type="submit">Kiểm tra</button>
+      </form>
+
+      <div id="resultBox" class="result hidden"></div>
+    </section>
+
+    <section class="card" id="historySection">
+      <div class="history-header">
+        <h3>🗂️ Lịch sử phân tích đã lưu (SHA-256)</h3>
+        <button type="button" class="btn-ghost" onclick="loadHistory()">Làm mới</button>
+      </div>
+      <div id="historyList" class="history-list">
+        <div style="color: var(--muted); font-size: 0.85rem;">Chưa có bản ghi nào được lưu.</div>
+      </div>
+    </section>
+  </main>
 
   <script>
-    let socToken = sessionStorage.getItem("soc_token") || null;
-    let lastScannedUrl = "";
-    let lastBatchRows = [];
-    let currentFeatTab = "length";
-    let lastSocInspectData = null;
+    let currentOriginalQuery = "";
 
-    function escapeHtml(str) {
-      return String(str ?? "")
+    function escapeHtml(value) {
+      return String(value ?? "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -676,439 +417,175 @@
         .replace(/'/g, "&#39;");
     }
 
-    async function checkHealth() {
-      try {
-        const res = await fetch("/api/health");
-        const data = await res.json();
-        const dot = document.getElementById("modelDot");
-        const txt = document.getElementById("modelStatusText");
-        const alertBox = document.getElementById("modelMissingAlert");
-        if (data.model_loaded) {
-          dot.classList.remove("err");
-          txt.textContent = `${data.model_name} (${data.feature_count} features)`;
-          alertBox.classList.add("hidden");
-        } else {
-          dot.classList.add("err");
-          txt.textContent = "Chưa có file .pkl";
-          alertBox.textContent = data.model_error || "Thiếu file model.";
-          alertBox.classList.remove("hidden");
-        }
-      } catch (e) {
-        document.getElementById("modelStatusText").textContent = "Lỗi kết nối server";
+    function renderHighlightedHost(highlights, fallbackHost) {
+      if (!Array.isArray(highlights) || !highlights.length) {
+        return escapeHtml(fallbackHost || "");
       }
+      return highlights
+        .map(item =>
+          item.flagged
+            ? `<span class="flagged-char" title="Ký tự khác bảng mã chuẩn">${escapeHtml(item.char)}</span>`
+            : escapeHtml(item.char)
+        )
+        .join("");
     }
 
-    function syncSocUi() {
-      const btn = document.getElementById("socToggleBtn");
-      const logoutBtn = document.getElementById("socLogoutBtn");
-      const ws = document.getElementById("socWorkspace");
-      if (socToken) {
-        btn.textContent = "🔓 SOC Analyst: Đang mở";
-        btn.classList.add("unlocked");
-        btn.onclick = () => document.getElementById("socWorkspace").scrollIntoView({ behavior: "smooth" });
-        logoutBtn.classList.remove("hidden");
-        ws.classList.remove("hidden");
-        loadThreatLogs();
-      } else {
-        btn.textContent = "🔒 SOC Analyst Mode";
-        btn.classList.remove("unlocked");
-        btn.onclick = openSocModal;
-        logoutBtn.classList.add("hidden");
-        ws.classList.add("hidden");
-      }
+    async function onSubmitUrl(event) {
+      event.preventDefault();
+      const query = document.getElementById("urlField").value.trim();
+      if (!query) return;
+      await runCheck(query, false);
     }
 
-    function openSocModal() {
-      document.getElementById("socAuthError").classList.add("hidden");
-      document.getElementById("socKeyInput").value = "";
-      document.getElementById("socModal").classList.remove("hidden");
-      document.getElementById("socKeyInput").focus();
-    }
+    async function runCheck(query, reanalyze) {
+      const btn = document.getElementById("submitBtn");
+      const box = document.getElementById("resultBox");
+      currentOriginalQuery = query;
 
-    function closeSocModal() {
-      document.getElementById("socModal").classList.add("hidden");
-    }
-
-    async function submitSocAuth(e) {
-      e.preventDefault();
-      const key = document.getElementById("socKeyInput").value;
-      const errBox = document.getElementById("socAuthError");
-      const res = await fetch("/api/soc/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ access_key: key }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        errBox.textContent = data.detail?.message || "Xác thực thất bại.";
-        errBox.classList.remove("hidden");
-        return;
-      }
-      socToken = data.token;
-      sessionStorage.setItem("soc_token", socToken);
-      closeSocModal();
-      syncSocUi();
-      if (lastScannedUrl) {
-        await inspectSoc(lastScannedUrl);
-      }
-    }
-
-    async function logoutSoc() {
-      if (socToken) {
-        await fetch("/api/soc/logout", {
-          method: "POST",
-          headers: { "X-SOC-Token": socToken },
-        });
-      }
-      socToken = null;
-      sessionStorage.removeItem("soc_token");
-      syncSocUi();
-    }
-
-    function runPreset(url) {
-      document.getElementById("urlInput").value = url;
-      scanUrl(url);
-    }
-
-    async function handleScan(e) {
-      e.preventDefault();
-      const url = document.getElementById("urlInput").value.trim();
-      if (!url) return;
-      await scanUrl(url);
-    }
-
-    async function scanUrl(url) {
-      lastScannedUrl = url;
-      const force = document.getElementById("forceRescan").checked;
-      const btn = document.getElementById("scanBtn");
       btn.disabled = true;
-      btn.textContent = "Đang quét...";
+      btn.textContent = "Đang xử lý...";
 
       try {
-        const res = await fetch("/api/scan", {
+        const res = await fetch("/api/check", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url, force_rescan: force }),
+          body: JSON.stringify({ url: query, reanalyze }),
         });
         const data = await res.json();
+
         if (!res.ok) {
-          renderErrorVerdict(data.detail || "Không thể quét URL.");
+          box.className = "result ERROR";
+          box.innerHTML = `<p class="advice">${escapeHtml(data.error || "Không thể xử lý yêu cầu.")}</p>`;
+          box.classList.remove("hidden");
           return;
         }
-        renderPublicVerdict(data);
-        document.getElementById("rateLimitInfo").textContent =
-          `Anti-Probing Quota còn lại: ${data.rate_limit_remaining} lượt/phút`;
 
-        if (socToken) {
-          await inspectSoc(url);
-        }
+        renderResultCard(data, query);
+        await loadHistory();
+      } catch (_err) {
+        box.className = "result ERROR";
+        box.innerHTML = "<p class='advice'>Không thể kết nối tới máy chủ kiểm tra.</p>";
+        box.classList.remove("hidden");
       } finally {
         btn.disabled = false;
-        btn.textContent = "Quét URL";
+        btn.textContent = "Kiểm tra";
       }
     }
 
-    function renderErrorVerdict(msg) {
-      const sec = document.getElementById("verdictSection");
-      sec.classList.remove("hidden");
-      sec.innerHTML = `<div class="alert-banner">${escapeHtml(msg)}</div>`;
-    }
+    function renderResultCard(d, rawQuery) {
+      const box = document.getElementById("resultBox");
+      const verdict = d.verdict === "LEGITIMATE" ? "LEGITIMATE" : "PHISHING";
+      const storageLabel = d.from_cache
+        ? `💾 Đã lưu sẵn (Tra cứu lần ${d.hit_count})`
+        : `✨ Đã phân tích & lưu mới`;
 
-    function renderPublicVerdict(d) {
-      const sec = document.getElementById("verdictSection");
-      sec.classList.remove("hidden");
-      const icon = d.verdict === "SAFE" ? "🟢" : d.verdict === "SUSPICIOUS" ? "🟡" : "🔴";
-      const cacheBadge = d.cache_hit
-        ? `⚡ Threat Cache Hit (Lần thứ ${d.hit_count})`
-        : `🔍 Live 2-Layer Scan (Lần thứ ${d.hit_count})`;
-
-      const idnHtml = d.idn_notice
-        ? `<div class="idn-alert">⚠️ ${escapeHtml(d.idn_notice)}</div>`
+      const isHashLookup = /^[a-fA-F0-9]{64}$/.test(rawQuery);
+      const reanalyzeBtn = !isHashLookup
+        ? `<button type="button" class="btn-ghost" onclick="reanalyzeCurrent()">🔄 Phân tích lại</button>`
         : "";
 
-      sec.innerHTML = `
-        <div class="verdict-card ${escapeHtml(d.verdict)}">
-          <div class="verdict-header">
-            <span class="verdict-badge">${icon} ${escapeHtml(d.verdict)} · RISK ${escapeHtml(d.risk_level)}</span>
-            <span class="pill">${escapeHtml(cacheBadge)}</span>
+      const reasonsHtml = (d.reasons || [])
+        .map(r => `<li>${escapeHtml(r)}</li>`)
+        .join("");
+
+      const hasSpoofedHost =
+        d.unicode_host &&
+        d.punycode_host &&
+        d.unicode_host !== d.punycode_host;
+
+      const punycodeNote = hasSpoofedHost
+        ? `<span style="color:var(--muted); font-size:0.8rem;">Punycode: <code>${escapeHtml(d.punycode_host)}</code></span>`
+        : "";
+
+      box.className = `result ${verdict}`;
+      box.innerHTML = `
+        <div class="result-top">
+          <div class="badge-group">
+            <span class="badge">${verdict}</span>
+            <span class="storage-pill">${escapeHtml(storageLabel)}</span>
           </div>
-          <h2 class="verdict-title">${escapeHtml(d.headline)}</h2>
-          <p class="verdict-advice">${escapeHtml(d.user_advice)}</p>
-          ${idnHtml}
-          <div class="meta-strip">
-            <div class="meta-item">
-              <span>VirusTotal-style URL SHA-256</span>
-              <code>${escapeHtml(d.url_sha256)}</code>
-            </div>
-            <div class="meta-item">
-              <span>Cập nhật gần nhất (UTC)</span>
-              <code>${escapeHtml(d.last_scanned)}</code>
-            </div>
+          ${reanalyzeBtn}
+        </div>
+
+        <h2>${escapeHtml(d.title)}</h2>
+        <p class="advice">${escapeHtml(d.advice)}</p>
+
+        <div class="domain-spotlight">
+          <div>
+            <span style="color:var(--muted); font-size:0.76rem; margin-right:6px;">Mục tiêu:</span>
+            <span>${d.unicode_host ? renderHighlightedHost(d.char_highlights, d.unicode_host) : escapeHtml(d.target_display)}</span>
           </div>
-          <div class="anti-evasion-note">
-            🛡️ Chế độ End-User: Chi tiết 27 đặc trưng, xác suất và ngưỡng đã được ẩn ở Server để chống dò tìm (Anti-Evasion).
+          ${punycodeNote}
+        </div>
+
+        <div class="reasons-box">
+          <div class="reasons-title">Nhận định phân tích</div>
+          <ul class="reasons-list">${reasonsHtml}</ul>
+        </div>
+
+        <div class="fingerprint-grid">
+          <div class="fp-item" style="grid-column: 1 / -1;">
+            <span>Mã định danh bản ghi (SHA-256) <button type="button" class="btn-ghost" style="padding:2px 8px; margin-left:6px; font-size:0.7rem;" onclick="copyHash('${escapeHtml(d.sha256)}')">Copy</button></span>
+            <code>${escapeHtml(d.sha256)}</code>
+          </div>
+          <div class="fp-item">
+            <span>Ghi nhận lần đầu (UTC)</span>
+            <code>${escapeHtml(d.first_seen)}</code>
+          </div>
+          <div class="fp-item">
+            <span>Cập nhật gần nhất (UTC)</span>
+            <code>${escapeHtml(d.last_seen)}</code>
           </div>
         </div>
       `;
+      box.classList.remove("hidden");
     }
 
-    async function inspectSoc(url) {
-      if (!socToken || !url) return;
-      const threshold = parseFloat(document.getElementById("thresholdSlider").value);
-      const force = document.getElementById("forceRescan").checked;
-      const res = await fetch("/api/soc/inspect", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-SOC-Token": socToken,
-        },
-        body: JSON.stringify({ url, threshold, force_rescan: force }),
-      });
-
-      if (res.status === 401) {
-        socToken = null;
-        sessionStorage.removeItem("soc_token");
-        syncSocUi();
-        return;
-      }
-
-      const data = await res.json();
-      if (!res.ok) return;
-      lastSocInspectData = data;
-      renderSocInspect(data);
-      loadThreatLogs();
-    }
-
-    async function onThresholdChange(val) {
-      document.getElementById("thresholdVal").textContent = Number(val).toFixed(2);
-      if (socToken && lastScannedUrl) {
-        await inspectSoc(lastScannedUrl);
+    function reanalyzeCurrent() {
+      if (currentOriginalQuery) {
+        runCheck(currentOriginalQuery, true);
       }
     }
 
-    function renderSocInspect(d) {
-      document.getElementById("socEmptyHint").classList.add("hidden");
-      const wrap = document.getElementById("socInspectContent");
-      wrap.classList.remove("hidden");
+    function copyHash(hash) {
+      navigator.clipboard?.writeText(hash);
+    }
 
-      const h = d.layer1_homograph;
-      const ml = d.layer2_ml;
-      const anat = d.url_anatomy;
+    function lookupSavedHash(hash) {
+      const input = document.getElementById("urlField");
+      input.value = hash;
+      runCheck(hash, false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-      const xrayCharsHtml = (h.char_xray || []).map(c => {
-        const cls = c.flagged ? "char-box flagged" : "char-box";
-        const tip = `${c.codepoint} · ${c.unicode_name}${c.lookalike_latin ? " (giả dạng '" + c.lookalike_latin + "')" : ""}`;
-        return `<div class="${cls}" title="${escapeHtml(tip)}">
-          <span class="ch">${escapeHtml(c.char)}</span>
-          <span class="cp">${escapeHtml(c.flagged ? c.script : c.codepoint)}</span>
-        </div>`;
-      }).join("");
-
-      const suspiciousRows = (h.suspicious_chars || []).map(s =>
-        `<li><code>${escapeHtml(s.char)}</code> (${escapeHtml(s.codepoint)}) — <strong>${escapeHtml(s.unicode_name)}</strong>${s.lookalike_latin ? ` → giả dạng <code>'${escapeHtml(s.lookalike_latin)}'</code>` : ""}</li>`
-      ).join("");
-
-      const findingsHtml = (d.findings || []).map(f =>
-        `<div class="finding-item ${escapeHtml(f.severity)}">
-          <strong>${escapeHtml(f.title)}</strong><br/>
-          <span style="color:var(--muted);">${escapeHtml(f.detail)}</span>
-        </div>`
-      ).join("");
-
-      const mlPct = (ml.phishing_prob * 100).toFixed(2);
-      const fusedPct = (d.risk_score * 100).toFixed(2);
-
-      wrap.innerHTML = `
-        <div class="grid-2">
-          <div class="subpanel">
-            <h3><span>Layer 1: Character X-Ray & IDNA</span><span>${escapeHtml(h.homograph_risk)}</span></h3>
-            <div class="xray-stream">${xrayCharsHtml || "<span style='color:var(--muted)'>Không có hostname</span>"}</div>
-            <div class="kv-list">
-              <div class="kv-row"><span>Unicode Hostname</span><code>${escapeHtml(h.unicode_hostname)}</code></div>
-              <div class="kv-row"><span>Punycode (DNS thật)</span><code>${escapeHtml(h.punycode_hostname)}</code></div>
-              <div class="kv-row"><span>Bảng chữ cái (Scripts)</span><code>${escapeHtml((h.scripts || []).join(", ") || "NONE")}</code></div>
-              <div class="kv-row"><span>Skeleton đối chiếu</span><code>${escapeHtml(h.skeleton_hostname)}</code></div>
-              <div class="kv-row"><span>Giả mạo thương hiệu</span><code>${escapeHtml(h.spoofed_brand || "Không phát hiện")}</code></div>
+    async function loadHistory() {
+      try {
+        const res = await fetch("/api/history");
+        if (!res.ok) return;
+        const data = await res.json();
+        const items = data.items || [];
+        const container = document.getElementById("historyList");
+        if (!items.length) {
+          container.innerHTML = "<div style='color: var(--muted); font-size: 0.85rem;'>Chưa có bản ghi nào được lưu.</div>";
+          return;
+        }
+        container.innerHTML = items
+          .map(
+            item => `
+            <div class="history-row" onclick="lookupSavedHash('${escapeHtml(item.url_hash)}')" title="Bấm để mở lại báo cáo từ SHA-256">
+              <div class="history-left">
+                <div class="history-target">${escapeHtml(item.target_display)}</div>
+                <div class="history-hash">SHA-256: ${escapeHtml(item.url_hash.slice(0, 24))}... · Lượt tra cứu: ${escapeHtml(item.hit_count)}</div>
+              </div>
+              <span class="mini-tag ${escapeHtml(item.verdict)}">${escapeHtml(item.verdict)}</span>
             </div>
-            ${suspiciousRows ? `<ul style="margin:10px 0 0; padding-left:18px; font-size:0.8rem; color:#fecaca;">${suspiciousRows}</ul>` : ""}
-          </div>
-
-          <div class="subpanel">
-            <h3><span>Layer 2: ML Engine & Decision Fusion</span><span>${escapeHtml(ml.model_name)}</span></h3>
-            <div style="font-size:0.86rem; color:var(--muted);">Xác suất Phishing từ Random Forest (27 features): <strong style="color:var(--text)">${mlPct}%</strong></div>
-            <div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:${mlPct}%"></div></div>
-            <div class="kv-list">
-              <div class="kv-row"><span>ML Raw Prediction (@ ${ml.threshold.toFixed(2)})</span><code>${escapeHtml(ml.ml_prediction)}</code></div>
-              <div class="kv-row"><span>P(Phishing) / P(Legitimate)</span><code>${(ml.phishing_prob*100).toFixed(2)}% / ${(ml.legit_prob*100).toFixed(2)}%</code></div>
-              <div class="kv-row"><span>Hybrid Risk Score (Layer 1 + 2)</span><code>${fusedPct}% → ${escapeHtml(d.verdict)}</code></div>
-              <div class="kv-row"><span>PhiUSIIL Legit Mean Length</span><code>${d.eda_baseline.url_length_mean} (max ${d.eda_baseline.url_length_max})</code></div>
-            </div>
-            <div style="margin-top:12px;">
-              <strong style="font-size:0.85rem;">Security Findings:</strong>
-              <div style="margin-top:8px;">${findingsHtml}</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="subpanel" style="margin-bottom:16px;">
-          <h3>URL Anatomy Breakdown</h3>
-          <div class="anatomy-grid">
-            <div class="anatomy-cell"><label>Scheme</label><code>${escapeHtml(anat.scheme)}</code></div>
-            <div class="anatomy-cell"><label>Subdomain</label><code>${escapeHtml(anat.subdomain)}</code></div>
-            <div class="anatomy-cell"><label>Root Domain</label><code>${escapeHtml(anat.root_domain)}</code></div>
-            <div class="anatomy-cell"><label>Punycode</label><code>${escapeHtml(anat.punycode)}</code></div>
-            <div class="anatomy-cell"><label>Path</label><code>${escapeHtml(anat.path)}</code></div>
-            <div class="anatomy-cell"><label>Query</label><code>${escapeHtml(anat.query)}</code></div>
-          </div>
-        </div>
-
-        <div class="subpanel">
-          <h3>27 Lexical Features (Khớp Slide 15 & CELL 18)</h3>
-          <div class="tabs" style="margin-bottom:10px;">
-            <button type="button" class="tab-btn ${currentFeatTab==='length'?'active':''}" onclick="switchFeatTab('length')">Nhóm độ dài (5)</button>
-            <button type="button" class="tab-btn ${currentFeatTab==='structure'?'active':''}" onclick="switchFeatTab('structure')">Nhóm cấu trúc & dấu hiệu (8)</button>
-            <button type="button" class="tab-btn ${currentFeatTab==='char_counts'?'active':''}" onclick="switchFeatTab('char_counts')">Nhóm đếm ký tự (14)</button>
-          </div>
-          <div id="featGroupContainer" class="feat-grid"></div>
-        </div>
-      `;
-      renderFeatureGroup(currentFeatTab);
+          `
+          )
+          .join("");
+      } catch (_e) {}
     }
 
-    function switchFeatTab(group) {
-      currentFeatTab = group;
-      if (lastSocInspectData) renderSocInspect(lastSocInspectData);
-    }
-
-    function renderFeatureGroup(group) {
-      const container = document.getElementById("featGroupContainer");
-      if (!container || !lastSocInspectData) return;
-      const list = lastSocInspectData.features_grouped[group] || [];
-      container.innerHTML = list.map(f =>
-        `<div class="feat-chip"><span>${escapeHtml(f.name)}</span><strong>${escapeHtml(f.value)}</strong></div>`
-      ).join("");
-    }
-
-    function switchSocTab(tab) {
-      ["xray", "batch", "logs"].forEach(t => {
-        document.getElementById("socTab" + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle("hidden", t !== tab);
-        document.getElementById("tab" + t.charAt(0).toUpperCase() + t.slice(1) + "Btn").classList.toggle("active", t === tab);
-      });
-      if (tab === "logs") loadThreatLogs();
-    }
-
-    async function runBatchText() {
-      const raw = document.getElementById("batchUrlsInput").value;
-      const urls = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-      const threshold = parseFloat(document.getElementById("thresholdSlider").value);
-      const res = await fetch("/api/soc/batch", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-SOC-Token": socToken },
-        body: JSON.stringify({ urls, threshold }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.detail || "Lỗi batch scan");
-        return;
-      }
-      renderBatchResults(data);
-    }
-
-    async function runBatchCsv() {
-      const input = document.getElementById("batchCsvFile");
-      if (!input.files.length) { alert("Hãy chọn một file .csv"); return; }
-      const threshold = parseFloat(document.getElementById("thresholdSlider").value);
-      const fd = new FormData();
-      fd.append("file", input.files[0]);
-      const res = await fetch(`/api/soc/batch-csv?threshold=${threshold}`, {
-        method: "POST",
-        headers: { "X-SOC-Token": socToken },
-        body: fd,
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.detail || "Lỗi đọc CSV");
-        return;
-      }
-      renderBatchResults(data);
-    }
-
-    function renderBatchResults(data) {
-      lastBatchRows = data.results || [];
-      document.getElementById("downloadBatchCsvBtn").classList.remove("hidden");
-      const s = data.summary || {};
-      const rowsHtml = lastBatchRows.map(r => `
-        <tr>
-          <td><code>${escapeHtml(r.url)}</code></td>
-          <td><strong>${escapeHtml(r.verdict)}</strong></td>
-          <td><code>${(r.ml_phishing_prob * 100).toFixed(1)}%</code></td>
-          <td><code>${escapeHtml(r.homograph_risk)}</code></td>
-          <td><code>${escapeHtml(r.url_sha256.slice(0, 16))}...</code></td>
-        </tr>
-      `).join("");
-
-      document.getElementById("batchResultsArea").innerHTML = `
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
-          <span class="pill">Tổng: ${data.total}</span>
-          <span class="pill">🟢 SAFE: ${s.SAFE || 0}</span>
-          <span class="pill">🟡 SUSPICIOUS: ${s.SUSPICIOUS || 0}</span>
-          <span class="pill">🔴 PHISHING: ${s.PHISHING || 0}</span>
-        </div>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead><tr><th>URL</th><th>Verdict</th><th>ML P(Phish)</th><th>Homograph</th><th>SHA-256</th></tr></thead>
-            <tbody>${rowsHtml}</tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    function downloadBatchCsv() {
-      if (!lastBatchRows.length) return;
-      const header = ["url", "verdict", "risk_score", "ml_phishing_prob", "homograph_risk", "punycode", "url_sha256"];
-      const lines = [header.join(",")].concat(
-        lastBatchRows.map(r => header.map(k => `"${String(r[k] ?? "").replace(/"/g, '""')}"`).join(","))
-      );
-      const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "phishing_batch_report.csv";
-      a.click();
-    }
-
-    async function loadThreatLogs() {
-      if (!socToken) return;
-      const res = await fetch("/api/soc/logs?limit=30", {
-        headers: { "X-SOC-Token": socToken },
-      });
-      if (!res.ok) return;
-      const data = await res.json();
-      const logs = data.logs || [];
-      if (!logs.length) {
-        document.getElementById("logsTableArea").innerHTML = "<p style='color:var(--muted)'>Chưa có lịch sử quét nào.</p>";
-        return;
-      }
-      const rows = logs.map(l => `
-        <tr>
-          <td><code>${escapeHtml(l.url_hash.slice(0, 20))}...</code></td>
-          <td><code>${escapeHtml(l.masked_host)}</code></td>
-          <td><strong>${escapeHtml(l.verdict)}</strong></td>
-          <td><code>${escapeHtml(l.homograph_risk)}</code></td>
-          <td><code>${(l.ml_phishing_prob * 100).toFixed(1)}%</code></td>
-          <td>${escapeHtml(l.hit_count)}</td>
-          <td><code>${escapeHtml(l.last_seen)}</code></td>
-        </tr>
-      `).join("");
-      document.getElementById("logsTableArea").innerHTML = `
-        <table>
-          <thead><tr><th>URL SHA-256</th><th>Masked Host</th><th>Verdict</th><th>Homograph</th><th>ML P(Phish)</th><th>Hits</th><th>Last Seen</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      `;
-    }
-
-    checkHealth();
-    syncSocUi();
+    loadHistory();
   </script>
 </body>
 </html>

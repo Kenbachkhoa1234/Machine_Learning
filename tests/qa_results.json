@@ -1,0 +1,715 @@
+{
+  "url_cases": [
+    {
+      "id": "TC-L01",
+      "category": "Legitimate",
+      "description": "Root HTTPS chuẩn (Google)",
+      "url_preview": "https://www.google.com",
+      "expected": [
+        "LEGITIMATE"
+      ],
+      "actual_verdict": "LEGITIMATE",
+      "reasons": [
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
+        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+      ],
+      "sha256": "d0e196a0c25d35dd0a84593cbae0f38333aa58529936444ea26453eab28dfc86",
+      "internal_ml_prob": 0.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-L02",
+      "category": "Legitimate",
+      "description": "Cloudflare chính chủ HTTPS",
+      "url_preview": "https://www.cloudflare.com/",
+      "expected": [
+        "LEGITIMATE"
+      ],
+      "actual_verdict": "LEGITIMATE",
+      "reasons": [
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
+        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+      ],
+      "sha256": "a6ad87b96b6f44b6b903d3db0d28b0f75e62c6ec246afd9e218723c6168baad3",
+      "internal_ml_prob": 0.0077,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-L03",
+      "category": "Legitimate",
+      "description": "Ngân hàng VN HTTPS root",
+      "url_preview": "https://www.vietcombank.com.vn",
+      "expected": [
+        "LEGITIMATE"
+      ],
+      "actual_verdict": "LEGITIMATE",
+      "reasons": [
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
+        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+      ],
+      "sha256": "c9b5bd4d9e5de0492ee73b39ed0e595c2112de7796aa1e1c0265cf96c270b842",
+      "internal_ml_prob": 0.0003,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-L04",
+      "category": "Legitimate",
+      "description": "Domain đại học có dấu gạch ngang",
+      "url_preview": "https://www.uni-mainz.de",
+      "expected": [
+        "LEGITIMATE"
+      ],
+      "actual_verdict": "LEGITIMATE",
+      "reasons": [
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
+        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+      ],
+      "sha256": "c4553c66be0bce95883633b4034122061877afca4ee47012093ab0dd3a8b99e5",
+      "internal_ml_prob": 0.0255,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-L05",
+      "category": "Legitimate-Edge",
+      "description": "Thiếu scheme https:// (gõ tắt www.microsoft.com)",
+      "url_preview": "www.microsoft.com",
+      "expected": [
+        "LEGITIMATE"
+      ],
+      "actual_verdict": "LEGITIMATE",
+      "reasons": [
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
+        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+      ],
+      "sha256": "abb5ddea57c82ce1a6637499144e2496e04e8f356a0fe0e011d69a3ee8f5c776",
+      "internal_ml_prob": 0.0096,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-L06",
+      "category": "Legitimate-Edge",
+      "description": "Chữ in hoa toàn bộ + dấu / cuối",
+      "url_preview": "HTTPS://WWW.GITHUB.COM/",
+      "expected": [
+        "LEGITIMATE"
+      ],
+      "actual_verdict": "LEGITIMATE",
+      "reasons": [
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
+        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+      ],
+      "sha256": "23c73f27313c7c157556c5f4cb20afc434bc50472ab8cb4f0f8ba4d7cfa3b20f",
+      "internal_ml_prob": 0.0025,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-L07",
+      "category": "Legitimate-Edge",
+      "description": "URL hợp lệ có anchor #fragment",
+      "url_preview": "https://www.wikipedia.org/#top",
+      "expected": [
+        "LEGITIMATE"
+      ],
+      "actual_verdict": "LEGITIMATE",
+      "reasons": [
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
+        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+      ],
+      "sha256": "9a9d50ec8631eafde241ce5b6991ebb9ba74c8543397179e1b589e700bedefd4",
+      "internal_ml_prob": 0.0063,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-L08",
+      "category": "Legitimate-Edge",
+      "description": "Domain .co.uk hợp lệ",
+      "url_preview": "https://www.voicefmradio.co.uk",
+      "expected": [
+        "LEGITIMATE"
+      ],
+      "actual_verdict": "LEGITIMATE",
+      "reasons": [
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
+        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+      ],
+      "sha256": "a05b780fb3f9b08c8cf805adb564f1649c7997cc8de24ffa471fab06fa8d6e26",
+      "internal_ml_prob": 0.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-B01",
+      "category": "Dataset-Bias",
+      "description": "Link GitHub repo hợp lệ có path sâu",
+      "url_preview": "https://github.com/scikit-learn/scikit-learn",
+      "expected": [
+        "LEGITIMATE",
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
+      ],
+      "sha256": "8e773aa72402b28ae19e382519d01c82f0031bcc60a6b9dc5240473aa99a32e5",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-B02",
+      "category": "Dataset-Bias",
+      "description": "Link bài báo hợp lệ có số & .html",
+      "url_preview": "https://vnexpress.net/ai-bao-mat-2026-4819203.html",
+      "expected": [
+        "LEGITIMATE",
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
+      ],
+      "sha256": "438647b3acee357e8b437efdfc5b2cf0da9ae7dea987c2b9d8e240909be23a74",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-B03",
+      "category": "Dataset-Bias",
+      "description": "Link Google Search có query ?q=&hl=",
+      "url_preview": "https://www.google.com/search?q=machine+learning&hl=vi",
+      "expected": [
+        "LEGITIMATE",
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
+      ],
+      "sha256": "6c4bc6463971e70344417ac4fd7b290ce797813d0218ce7ba9f78e3fe5645a45",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P01",
+      "category": "Phishing-Lexical",
+      "description": "IPv4 trực tiếp + login/verify",
+      "url_preview": "http://192.168.1.1/secure-login/verify-account.php?id=9981",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Sử dụng trực tiếp địa chỉ IP thay vì tên miền định danh hợp lệ.",
+        "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật.",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "6f9262b7ccf990088dd6795dfe0f1e82deb13a041f9f3ce42a01921dd616a12d",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P02",
+      "category": "Phishing-Lexical",
+      "description": "Public IPv4 + PHP script",
+      "url_preview": "http://91.239.125.28/postchs/sms.php",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Sử dụng trực tiếp địa chỉ IP thay vì tên miền định danh hợp lệ.",
+        "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật."
+      ],
+      "sha256": "718baaacdde23ea97b1a0390a7abebdeba001d3be802d66d8d500809875322a0",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P03",
+      "category": "Phishing-Lexical",
+      "description": "Kỹ thuật đánh lừa dấu @ trong URL",
+      "url_preview": "https://www.google.com@evil-login-stealer.xyz/auth",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Đường dẫn chứa ký tự '@' có thể đánh lừa trình duyệt chuyển hướng sang máy chủ đích khác.",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "8a6cdddeab8ceb2a2998aa9875c71d92bc7d1ba341e31ca34b3dbabb6ac61745",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P04",
+      "category": "Phishing-Lexical",
+      "description": "Nhồi nhét nhiều subdomain giả mạo",
+      "url_preview": "http://paypal.com.secure.account-update.verify-now.top/signin",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật.",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "cc030944f41015476fbd2b378cd67dbfd1894e8d1e75feef8b17db14b27e5538",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P05",
+      "category": "Phishing-Lexical",
+      "description": "Double-slash // trong path",
+      "url_preview": "https://cdn-redirect.example.net//https://fake-bank-login.tk/login",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Đường dẫn chứa cấu trúc chuyển hướng lồng nhau bất thường ('//').",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "24990c8f14947902fa66ec16bd7521b3cad9d37f28291bfe7188740c1ff18b61",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P06",
+      "category": "Phishing-Lexical",
+      "description": "Mã hóa phần trăm (%xx) che giấu từ khóa",
+      "url_preview": "http://secure-update.xyz/%6c%6f%67%69%6e/%76%65%72%69%66%79?user=admin%40bank.com",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật.",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "f2d93c03f3f38f3e26c333e24ce9cb83f428709a6d217d794992e751416ee5a2",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P07",
+      "category": "Phishing-Lexical",
+      "description": "Subdomain ngẫu nhiên + token entropy cao",
+      "url_preview": "https://b4e921f0.sso-mailsrvr-4344e5teed.pages.dev/auth?session=9f8a7b6c5d4e3f2a1b0c9d8e7f6a...",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "ca6b9c9c724da12264d3265c2021b0acc6147472094e790e0794e366660f37fb",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P08",
+      "category": "Phishing-Edge",
+      "description": "Root domain phishing ngắn có HTTPS",
+      "url_preview": "https://secure-vietcombank-login.com",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "fa7daab960f21feb0bd2af7b5922f382800f824a56dd3ca55627dffc6595db29",
+      "internal_ml_prob": 0.98,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P09",
+      "category": "Phishing-Lexical",
+      "description": "IPv6 trực tiếp kèm trang verify",
+      "url_preview": "http://[2001:db8:85a3::8a2e:370:7334]/bank/verify.php",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Sử dụng trực tiếp địa chỉ IP thay vì tên miền định danh hợp lệ.",
+        "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật.",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "994dec97454d4351ddca6e3f238c2bcfadce17ea369c87c42090e40939e99ea3",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P10",
+      "category": "Phishing-Lexical",
+      "description": "Cổng lạ :8080 kèm từ khóa đăng nhập",
+      "url_preview": "http://login-apple-id.servehttp.com:8080/signin",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật.",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "31cc8ec43a8365e7444d469549be9cc09fff59e9df0b1cf993090ac7edd56617",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P11",
+      "category": "Phishing-Lexical",
+      "description": "Payload Base64 ẩn sau dấu #fragment dài",
+      "url_preview": "https://xwebhostapp.github.io/freehost//#eyJ2ZXJpZnkiOiJwaGlzaGluZyIsInRva2VuIjoiMTIzNDU2Nzg...",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Đường dẫn chứa cấu trúc chuyển hướng lồng nhau bất thường ('//')."
+      ],
+      "sha256": "23bbe1c1d01238c939875ca549f32974b927761d42171bb29de3a7485235af76",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-H01",
+      "category": "Homograph",
+      "description": "Cloudflare giả mạo bằng chữ α Hy Lạp (cloudflαre.com)",
+      "url_preview": "https://www.cloudflαre.com/",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'cloudflare.com' — phát hiện ký tự đồng hình khác bảng mã: 'α' (Hy Lạp (Greek)) (tên miền thực tế: www.xn--cloudflre-wxg.com)."
+      ],
+      "sha256": "7370b555f1802a0b4162692c42e8384fbe8c0687ce9f3a32c3e7436b9f2bfa29",
+      "internal_ml_prob": 0.1267,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H02",
+      "category": "Homograph",
+      "description": "Chữ Hy Lạp Omicron 'ο' trộn Latin (gοοgle.com)",
+      "url_preview": "https://www.gοοgle.com/login",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'google.com' — phát hiện ký tự đồng hình khác bảng mã: 'ο' (Hy Lạp (Greek)), 'ο' (Hy Lạp (Greek)) (tên miền thực tế: www.xn--ggle-0nda.com).",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "73fbc0eb1a8458df24cf7c3e00b7e926df72a3a3b6f7b5d80b27f0f1ab27dea1",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H03",
+      "category": "Homograph",
+      "description": "Chữ Cyrillic giả mạo paypal.com (раураӏ.com)",
+      "url_preview": "https://www.раураӏ.com",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'paypal.com' — phát hiện ký tự đồng hình khác bảng mã: 'р' (Kirin (Cyrillic)), 'а' (Kirin (Cyrillic)), 'у' (Kirin (Cyrillic)), 'р' (Kirin (Cyrillic)) (tên miền thực tế: www.xn--80aa0cbo65f.com)."
+      ],
+      "sha256": "1d889938c258bab71212cc4ae3be65912379248466740a55bb80c667030aeaf4",
+      "internal_ml_prob": 0.8133,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H04",
+      "category": "Homograph",
+      "description": "Chữ Cyrillic giả mạo apple.com (аррӏе.com)",
+      "url_preview": "https://www.аррӏе.com",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'apple.com' — phát hiện ký tự đồng hình khác bảng mã: 'а' (Kirin (Cyrillic)), 'р' (Kirin (Cyrillic)), 'р' (Kirin (Cyrillic)), 'ӏ' (Kirin (Cyrillic)) (tên miền thực tế: www.xn--80ak6aa92e.com)."
+      ],
+      "sha256": "8d195a6b7dd486715c60613f7ab1832e288d4e5f516cd4e02f6a626afa27f724",
+      "internal_ml_prob": 0.82,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H05",
+      "category": "Homograph",
+      "description": "Dán trực tiếp Punycode xn--ggle-0nda.com (gοοgle)",
+      "url_preview": "https://www.xn--ggle-0nda.com/login",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'google.com' — phát hiện ký tự đồng hình khác bảng mã: 'ο' (Hy Lạp (Greek)), 'ο' (Hy Lạp (Greek)) (tên miền thực tế: www.xn--ggle-0nda.com).",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "73fbc0eb1a8458df24cf7c3e00b7e926df72a3a3b6f7b5d80b27f0f1ab27dea1",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H06",
+      "category": "Homograph",
+      "description": "Punycode chữ HOA (XN--80AK6AA92E.COM = apple)",
+      "url_preview": "HTTPS://WWW.XN--80AK6AA92E.COM/",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'apple.com' — phát hiện ký tự đồng hình khác bảng mã: 'а' (Kirin (Cyrillic)), 'р' (Kirin (Cyrillic)), 'р' (Kirin (Cyrillic)), 'ӏ' (Kirin (Cyrillic)) (tên miền thực tế: www.xn--80ak6aa92e.com)."
+      ],
+      "sha256": "8d195a6b7dd486715c60613f7ab1832e288d4e5f516cd4e02f6a626afa27f724",
+      "internal_ml_prob": 0.82,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H07",
+      "category": "Homograph",
+      "description": "Chèn ký tự tàng hình Zero-Width U+200B",
+      "url_preview": "https://www.goo​gle.com",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Phát hiện ký tự tàng hình (Zero-Width) chèn ẩn trong tên miền nhằm đánh lừa hiển thị.",
+        "Giả mạo tên miền quốc tế (IDN Homograph) — phát hiện ký tự đồng hình khác bảng mã (tên miền thực tế: www.google.com)."
+      ],
+      "sha256": "d0e196a0c25d35dd0a84593cbae0f38333aa58529936444ea26453eab28dfc86",
+      "internal_ml_prob": 0.0,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H08",
+      "category": "Homograph",
+      "description": "Trộn Latin + Hy Lạp giả mạo ngân hàng VN",
+      "url_preview": "https://vietcοmbank.com.vn/dang-nhap",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'vietcombank.com.vn' — phát hiện ký tự đồng hình khác bảng mã: 'ο' (Hy Lạp (Greek)) (tên miền thực tế: xn--vietcmbank-lqh.com.vn).",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "81498a9a205b67a163dbff7166ccd3168d8c6728fc8ee488fa4ba6d6d09f845f",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H09",
+      "category": "Homograph",
+      "description": "Subdomain Punycode giả mạo kèm domain lạ",
+      "url_preview": "https://xn--pple-43d.evil-host.org/verify",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Giả mạo tên miền quốc tế (IDN Homograph) — phát hiện ký tự đồng hình khác bảng mã: 'а' (Kirin (Cyrillic)) (tên miền thực tế: xn--pple-43d.evil-host.org).",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "6b965cfe50ab0af8d0d2f6dd5cab5f0d75b2ddc51449272e15f1df02e6e835ea",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-M01",
+      "category": "Dangerous-Scheme",
+      "description": "JavaScript URI (XSS/Phishing vector)",
+      "url_preview": "javascript:alert(document.cookie)",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Sử dụng giao thức URI thực thi hoặc nhúng nội dung trực tiếp không an toàn (javascript:)."
+      ],
+      "sha256": "6ddf33edc276c79c72c6ec19f52ed5175abf9a472b231784602c780d711219fa",
+      "internal_ml_prob": 0.9967,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-M02",
+      "category": "Dangerous-Scheme",
+      "description": "Data URI HTML giả mạo form đăng nhập",
+      "url_preview": "data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Sử dụng giao thức URI thực thi hoặc nhúng nội dung trực tiếp không an toàn (data:)."
+      ],
+      "sha256": "03a1d4e848444bb3c1e1da2c65d63f7e5b875b771c838b20bd1331b01d967c91",
+      "internal_ml_prob": 0.97,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-M03",
+      "category": "Injection",
+      "description": "Payload Reflected XSS trong path & query",
+      "url_preview": "https://example.com/<script>alert(1)</script>?q=\"><img src=x onerror=alert(1)>",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
+      ],
+      "sha256": "4028b580e126234e5077236964cfe92194c7b305176d549a185461d7f0090db5",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-M04",
+      "category": "Injection",
+      "description": "Payload SQL Injection trong tham số URL",
+      "url_preview": "https://example.com/login?user=admin' OR '1'='1'--",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "d162dc6dc3b5043c5b8d18f6c0955a18604e9fda2a9162a580cd5527bdf7be38",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-M05",
+      "category": "Malformed",
+      "description": "Port vượt giới hạn hợp lệ (:99999)",
+      "url_preview": "http://example.com:99999/test",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật."
+      ],
+      "sha256": "0e52b63fb7ec537ba0d9bd68f2c036f978cff1033f4651c4e4993dead6215eb5",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-M06",
+      "category": "Malformed",
+      "description": "IPv6 thiếu dấu đóng ngoặc vuông",
+      "url_preview": "http://[2001:db8::1/login",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật.",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "91883704dc50077b63cb97ac107d5351edaf82dacfcd789557c8131f40435e6c",
+      "internal_ml_prob": 0.95,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-M07",
+      "category": "Boundary",
+      "description": "URL siêu dài 4000 ký tự",
+      "url_preview": "https://evil.example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
+      ],
+      "sha256": "11b951515d7b7026edf0889c30bb0259f864223e1a935997d2718f5dca9784c1",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    }
+  ],
+  "security_cases": [
+    {
+      "id": "TC-S01",
+      "name": "Tắt hoàn toàn /docs & /openapi.json chống dò API",
+      "passed": true,
+      "detail": "/docs=404, /openapi.json=404"
+    },
+    {
+      "id": "TC-S02",
+      "name": "Không rò rỉ kiến trúc ML (Random Forest, 27 features, Layer, Threshold...) trong HTML & JSON",
+      "passed": true,
+      "detail": "Leaked=[]"
+    },
+    {
+      "id": "TC-S03",
+      "name": "Cơ chế VirusTotal: Quét mới -> Lưu SHA-256 -> Dán mã SHA-256 tra cứu lại -> Phân tích lại",
+      "passed": true,
+      "detail": "hash=7370b555f1802a0b..., by_hash_cache=True, reason=Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'cloudflare.com' — phát hiện ký tự đồng hình khác bảng mã: 'α' (Hy Lạp (Greek)) (tên miền thực tế: www.xn--cloudflre-wxg.com)."
+    },
+    {
+      "id": "TC-S04",
+      "name": "Lịch sử lưu trữ ẩn tham số nhạy cảm (?token=...) thành ?[...]",
+      "passed": true,
+      "detail": "History count=10, Token leaked=False"
+    },
+    {
+      "id": "TC-S05",
+      "name": "Xử lý mã SHA-256 chưa tồn tại (404) và đầu vào lỗi (400)",
+      "passed": true,
+      "detail": "UnknownHash=404, Blank=400"
+    },
+    {
+      "id": "TC-S06",
+      "name": "Chặn quét tự động (Rate Limit ngầm) không lộ con số quota",
+      "passed": true,
+      "detail": "Req 36=429"
+    }
+  ]
+}

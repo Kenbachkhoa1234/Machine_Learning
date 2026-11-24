@@ -1,7 +1,9 @@
-"""Two-way IDNA & Unicode Homograph Inspector for URLs (Greek, Cyrillic, mixed-script, brand spoofing)."""
+"""Two-way IDNA, Dangerous Scheme & Unicode Homograph Inspector for URLs."""
 
+import ipaddress
+import re
 import unicodedata
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlunsplit
 
 # High-frequency confusable characters (Greek, Cyrillic, Latin lookalikes) -> ASCII skeleton
 CONFUSABLE_MAP = {
@@ -54,15 +56,27 @@ ZERO_WIDTH_CHARS = {
     "\u200b", "\u200c", "\u200d", "\u200e", "\u200f", "\ufeff", "\u00ad", "\u2060"
 }
 
+DANGEROUS_SCHEMES = ("javascript:", "data:", "vbscript:", "file:")
+BENIGN_ANCHOR_RE = re.compile(r"^[A-Za-z0-9_\-]{1,24}$")
+
 PROTECTED_BRANDS = {
     "google.com", "youtube.com", "gmail.com", "facebook.com", "instagram.com",
     "whatsapp.com", "paypal.com", "apple.com", "icloud.com", "microsoft.com",
     "office.com", "live.com", "amazon.com", "netflix.com", "github.com",
     "linkedin.com", "twitter.com", "x.com", "binance.com", "coinbase.com",
+    "cloudflare.com", "discord.com", "telegram.org", "steampowered.com", "openai.com",
     "vietcombank.com.vn", "techcombank.com", "bidv.com.vn", "mbbank.com.vn",
     "acb.com.vn", "tpb.vn", "momo.vn", "zalopay.vn", "zalo.me", "shopee.vn",
     "tiki.vn", "lazada.vn",
 }
+
+
+def _is_ip_literal(host: str) -> bool:
+    try:
+        ipaddress.ip_address(host)
+        return True
+    except (ValueError, TypeError):
+        return False
 
 
 def _classify_char_script(ch: str) -> tuple[str, str]:
@@ -100,7 +114,6 @@ def _match_protected_brand(skeleton_host: str, punycode_host: str) -> str | None
     if not skeleton_host:
         return None
     for brand in PROTECTED_BRANDS:
-        # Exact domain or subdomain of the spoofed skeleton (e.g. www.google.com)
         if (skeleton_host == brand or skeleton_host.endswith("." + brand)) and not (
             punycode_host == brand or punycode_host.endswith("." + brand)
         ):
@@ -109,9 +122,42 @@ def _match_protected_brand(skeleton_host: str, punycode_host: str) -> str | None
 
 
 def analyze_url_homograph(url: str) -> dict:
-    """Inspect URL hostname using 2-way IDNA decoding and Unicode script analysis."""
+    """Inspect URL hostname using 2-way IDNA decoding, scheme validation, and Unicode X-Ray."""
     raw = str(url).strip()
-    parse_target = raw if "://" in raw else "//" + raw
+    raw_lower = raw.lower()
+
+    # Check dangerous non-HTTP schemes (javascript:, data:, vbscript:, file:)
+    if raw_lower.startswith(DANGEROUS_SCHEMES):
+        scheme_used = raw_lower.split(":", 1)[0]
+        return {
+            "raw_hostname": "",
+            "unicode_hostname": "",
+            "punycode_hostname": f"({scheme_used}-uri)",
+            "normalized_url_for_ml": raw,
+            "scheme": scheme_used,
+            "subdomain": "(none)",
+            "root_domain": f"({scheme_used}: payload)",
+            "path": raw[len(scheme_used) + 1 :][:120] or "/",
+            "query": "(none)",
+            "fragment": "(none)",
+            "dangerous_scheme": scheme_used,
+            "scripts": [],
+            "mixed_labels": [],
+            "has_greek": False,
+            "has_cyrillic": False,
+            "has_zero_width": any(c in ZERO_WIDTH_CHARS for c in raw),
+            "has_non_ascii": any(ord(c) > 127 for c in raw),
+            "is_punycode": False,
+            "is_mixed_script": False,
+            "skeleton_hostname": "",
+            "spoofed_brand": None,
+            "homograph_risk": "HIGH",
+            "suspicious_chars": [],
+            "char_xray": [],
+        }
+
+    has_explicit_scheme = "://" in raw
+    parse_target = raw if has_explicit_scheme else "//" + raw
 
     try:
         parsed = urlsplit(parse_target)
@@ -120,36 +166,54 @@ def analyze_url_homograph(url: str) -> dict:
         path = parsed.path or ""
         query = parsed.query or ""
         fragment = parsed.fragment or ""
+        # Preserve userinfo@ if present (e.g. google.com@evil.xyz) and port if valid
+        userinfo = ""
+        if parsed.username:
+            userinfo = parsed.username
+            if parsed.password:
+                userinfo += f":{parsed.password}"
+            userinfo += "@"
+        try:
+            port_str = f":{parsed.port}" if parsed.port else ""
+        except ValueError:
+            port_str = ""
     except (ValueError, TypeError):
-        scheme, raw_hostname, path, query, fragment = "", "", "", "", ""
+        scheme, raw_hostname, path, query, fragment, userinfo, port_str = "", "", "", "", "", "", ""
 
-    # 2-way IDNA: first encode to punycode if possible, and also decode xn-- back to Unicode
-    punycode_host = raw_hostname
+    # Default browser HTTPS-First scheme when user omits scheme on domain (HTTP for bare IP)
+    if not scheme:
+        scheme = "http" if _is_ip_literal(raw_hostname) else "https"
+
+    # Strip zero-width characters before encoding to IDNA punycode, while still recording them in X-Ray
+    clean_for_idna = "".join(c for c in raw_hostname if c not in ZERO_WIDTH_CHARS)
+    punycode_host = clean_for_idna
     unicode_host = raw_hostname
     idna_error = False
 
-    if raw_hostname:
-        if "xn--" in raw_hostname:
+    if clean_for_idna:
+        if "xn--" in clean_for_idna:
             try:
-                unicode_host = raw_hostname.encode("ascii").decode("idna")
+                decoded = clean_for_idna.encode("ascii").decode("idna")
+                unicode_host = decoded
+                punycode_host = clean_for_idna
             except Exception:
                 idna_error = True
         else:
             try:
-                punycode_host = raw_hostname.encode("idna").decode("ascii")
+                punycode_host = clean_for_idna.encode("idna").decode("ascii")
             except Exception:
                 idna_error = True
 
-        # Ensure unicode_host reflects decoded form when input was punycode
-        if "xn--" in punycode_host and unicode_host == raw_hostname and "xn--" in raw_hostname:
-            try:
-                unicode_host = punycode_host.encode("ascii").decode("idna")
-            except Exception:
-                idna_error = True
-
-    # Build canonical URL with punycode hostname for consistent hashing & ML has_punycode detection
-    if raw_hostname and punycode_host != raw_hostname and "://" in raw:
-        normalized_url = raw.replace(raw_hostname, punycode_host, 1)
+    # Build normalized URL for ML matching PhiUSIIL canonical structure:
+    # - lowercase scheme + punycode hostname (preserves userinfo@, port, IPv6 brackets)
+    # - strip benign short client-side #anchor (keep long/obfuscated #payloads)
+    # - strip browser-added trailing '/' on bare root domains (https://www.google.com/ -> https://www.google.com)
+    if raw_hostname:
+        host_netloc = f"[{punycode_host}]" if ":" in punycode_host else punycode_host
+        netloc_for_ml = f"{userinfo}{host_netloc}{port_str}"
+        kept_frag = "" if (not fragment or BENIGN_ANCHOR_RE.match(fragment)) else fragment
+        ml_path = "" if (path == "/" and not query and not kept_frag) else path
+        normalized_url = urlunsplit((scheme, netloc_for_ml, ml_path, query, kept_frag))
     else:
         normalized_url = raw
 
@@ -187,7 +251,6 @@ def analyze_url_homograph(url: str) -> dict:
             "flagged": is_non_latin_risk,
         })
 
-    # Check mixed scripts at label level (e.g. "gοοgle" mixes LATIN + GREEK)
     mixed_labels = []
     for label in unicode_host.split("."):
         label_scripts = {
@@ -207,9 +270,6 @@ def analyze_url_homograph(url: str) -> dict:
     skeleton_host = _to_skeleton(unicode_host)
     spoofed_brand = _match_protected_brand(skeleton_host, punycode_host)
 
-    # Risk tiering:
-    # HIGH: Mixed-script, Brand spoofing, Zero-width invisible chars, or Greek/Cyrillic impersonating Latin
-    # NOTICE: Pure single non-Latin script IDN (e.g., valid Vietnamese/Russian IDN without mixing or brand spoofing)
     if is_mixed_script or spoofed_brand or has_zero_width or idna_error:
         homograph_risk = "HIGH"
     elif has_non_ascii or is_punycode:
@@ -217,7 +277,6 @@ def analyze_url_homograph(url: str) -> dict:
     else:
         homograph_risk = "NONE"
 
-    # Extract clean subdomain/root display
     parts = [p for p in unicode_host.split(".") if p]
     subdomain = ".".join(parts[:-2]) if len(parts) > 2 else ""
     root_domain = ".".join(parts[-2:]) if len(parts) >= 2 else unicode_host
@@ -233,6 +292,7 @@ def analyze_url_homograph(url: str) -> dict:
         "path": path or "/",
         "query": query or "(none)",
         "fragment": fragment or "(none)",
+        "dangerous_scheme": None,
         "scripts": sorted(all_scripts),
         "mixed_labels": mixed_labels,
         "has_greek": has_greek,
