@@ -1,19 +1,20 @@
-"""SHA-256 URL Scan Database (VirusTotal-style Hash Lookup & History) and Rate Limiter."""
+"""Collision-Free SHA-256 Scan Store (SQLite WAL) and Memory-Safe Rate Limiter."""
 
+from collections import OrderedDict, deque
 from contextlib import closing
+from datetime import datetime, timezone
 import hashlib
 import json
+from pathlib import Path
 import re
 import sqlite3
 import threading
 import time
-from collections import defaultdict, deque
-from datetime import datetime, timezone
-from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
 DEFAULT_TTL_SECONDS = 86400 * 7  # Keep saved scan records for 7 days
 SHA256_HEX_RE = re.compile(r"^[a-fA-F0-9]{64}$")
+HIGH_ENTROPY_SEG_RE = re.compile(r"^[A-Za-z0-9_\-]{20,}$")
 
 
 def is_sha256_query(text: str) -> bool:
@@ -21,42 +22,71 @@ def is_sha256_query(text: str) -> bool:
     return bool(SHA256_HEX_RE.match(text.strip()))
 
 
-def canonicalize_url(raw_url: str, punycode_host: str = "") -> str:
-    """Normalize scheme and hostname (to punycode) before SHA-256 hashing."""
+def build_collision_free_cache_key(raw_url: str, homograph: dict) -> str:
+    """Build canonical key that equates pure Unicode<->Punycode IDNs WITHOUT colliding attacks.
+
+    Preserves Zero-Width chars, mixed-case ASCII homoglyphs (paypaI), userinfo@,
+    backslashes, explicit vs missing scheme on untrusted hosts, and fragments.
+    """
     cleaned = str(raw_url).strip()
-    parse_target = cleaned if "://" in cleaned else "https://" + cleaned
+    if homograph.get("dangerous_scheme"):
+        return cleaned
+
+    has_zw = homograph.get("has_zero_width", False)
+    has_bs = homograph.get("has_backslash_confusion", False)
+    has_case_spoof = bool(homograph.get("case_spoof_indices"))
+
+    # If any parser-tricking character or case-sensitive ASCII homoglyph is present, hash exact input
+    if has_zw or has_bs or has_case_spoof or "@" in cleaned:
+        return cleaned
+
+    has_scheme = "://" in cleaned
+    parse_target = cleaned if has_scheme else (f"{homograph.get('scheme', 'http')}://" + cleaned)
     try:
         parsed = urlsplit(parse_target)
-        scheme = (parsed.scheme or "https").lower()
-        host = (punycode_host or parsed.hostname or "").lower()
+        scheme = (parsed.scheme or "http").lower()
+        scheme_tag = scheme if has_scheme else f"noscheme:{scheme}"
+        host = (homograph.get("punycode_hostname") or parsed.hostname or "").lower()
         try:
             port = f":{parsed.port}" if parsed.port else ""
         except ValueError:
-            port = ""
-        netloc = f"{host}{port}"
+            port = ":invalid_port"
         path = parsed.path or "/"
-        return urlunsplit((scheme, netloc, path, parsed.query, ""))
+        frag = f"#{parsed.fragment}" if parsed.fragment else ""
+        return f"{scheme_tag}://{host}{port}{path}?{parsed.query}{frag}"
     except Exception:
         return cleaned
 
 
-def mask_url_for_storage(raw_url: str, unicode_host: str, scheme: str, path: str, query: str) -> str:
-    """Build privacy-safe display URL (redacts query values so tokens/passwords are never stored)."""
-    if not unicode_host:
-        return raw_url.split("?", 1)[0][:120]
-    clean_path = "" if path in ("", "/") else path
-    if query and query != "(none)":
-        return f"{scheme}://{unicode_host}{clean_path}?[...]"
-    return f"{scheme}://{unicode_host}{clean_path}"
+def compute_url_sha256(cache_key: str) -> str:
+    """Compute SHA-256 identifier of collision-free canonical key."""
+    return hashlib.sha256(cache_key.encode("utf-8")).hexdigest()
 
 
-def compute_url_sha256(canonical_url: str) -> str:
-    """Compute SHA-256 identifier of canonicalized URL."""
-    return hashlib.sha256(canonical_url.encode("utf-8")).hexdigest()
+def mask_url_for_storage(raw_url: str, display_host: str, scheme: str, path: str, query: str) -> str:
+    """Build privacy-safe display URL (redacts query values and high-entropy path tokens)."""
+    if not display_host:
+        return raw_url.split("?", 1)[0][:90]
+
+    if path in ("", "/"):
+        clean_path = ""
+    else:
+        masked_parts = []
+        for seg in path.split("/"):
+            if HIGH_ENTROPY_SEG_RE.match(seg) and any(c.isdigit() for c in seg):
+                masked_parts.append("[...]")
+            else:
+                masked_parts.append(seg)
+        clean_path = "/".join(masked_parts)
+        if len(clean_path) > 64:
+            clean_path = clean_path[:61] + "..."
+
+    suffix = "?[...]" if (query and query != "(none)") else ""
+    return f"{scheme}://{display_host}{clean_path}{suffix}"[:120]
 
 
 class ScanHistoryStore:
-    """SQLite store for VirusTotal-style SHA-256 scan persistence, lookup, and history."""
+    """SQLite WAL store for VirusTotal-style SHA-256 persistence, lookup, and history."""
 
     def __init__(self, db_path: Path):
         self.db_path = db_path
@@ -64,8 +94,11 @@ class ScanHistoryStore:
         self._init_db()
 
     def _connect(self) -> sqlite3.Connection:
-        conn = sqlite3.connect(self.db_path, check_same_thread=False)
+        conn = sqlite3.connect(self.db_path, timeout=5.0, check_same_thread=False)
         conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA journal_mode=WAL;")
+        conn.execute("PRAGMA synchronous=NORMAL;")
+        conn.execute("PRAGMA busy_timeout=5000;")
         return conn
 
     def _init_db(self) -> None:
@@ -135,7 +168,7 @@ class ScanHistoryStore:
         internal_homograph: str,
         ttl_seconds: int = DEFAULT_TTL_SECONDS,
     ) -> dict:
-        """Save or update a scan report without storing sensitive query tokens."""
+        """Save or update a scan report and prune expired entries."""
         h = url_hash.strip().lower()
         now_ts = time.time()
         now_iso = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -144,6 +177,7 @@ class ScanHistoryStore:
         highlights_str = json.dumps(char_highlights, ensure_ascii=False)
 
         with self._lock, closing(self._connect()) as conn:
+            conn.execute("DELETE FROM scan_records WHERE expires_at <= ?", (now_ts,))
             existing = conn.execute(
                 "SELECT hit_count, first_seen FROM scan_records WHERE url_hash = ?",
                 (h,),
@@ -204,7 +238,7 @@ class ScanHistoryStore:
         with self._lock, closing(self._connect()) as conn:
             rows = conn.execute(
                 """
-                SELECT url_hash, target_display, punycode_host, verdict, hit_count, first_seen, last_seen
+                SELECT url_hash, target_display, unicode_host, punycode_host, verdict, hit_count, first_seen, last_seen
                 FROM scan_records
                 WHERE expires_at > ?
                 ORDER BY last_seen DESC
@@ -216,21 +250,35 @@ class ScanHistoryStore:
 
 
 class SlidingWindowRateLimiter:
-    """Silent per-IP rate limiter to prevent automated probing."""
+    """Bounded LRU per-IP rate limiter (prevents both automated probing and RAM leaks)."""
 
-    def __init__(self, max_requests: int = 35, window_seconds: int = 60):
+    def __init__(self, max_requests: int = 60, window_seconds: int = 60, max_tracked_keys: int = 5000):
         self.max_requests = max_requests
         self.window_seconds = window_seconds
-        self._hits: dict[str, deque[float]] = defaultdict(deque)
+        self.max_tracked_keys = max_tracked_keys
+        self._hits: OrderedDict[str, deque[float]] = OrderedDict()
         self._lock = threading.Lock()
 
     def check(self, key: str) -> bool:
         now = time.time()
         cutoff = now - self.window_seconds
         with self._lock:
-            q = self._hits[key]
-            while q and q[0] <= cutoff:
-                q.popleft()
+            q = self._hits.get(key)
+            if q is not None:
+                while q and q[0] <= cutoff:
+                    q.popleft()
+                if not q:
+                    self._hits.pop(key, None)
+                    q = None
+
+            if q is None:
+                if len(self._hits) >= self.max_tracked_keys:
+                    self._hits.popitem(last=False)
+                q = deque()
+                self._hits[key] = q
+            else:
+                self._hits.move_to_end(key)
+
             if len(q) >= self.max_requests:
                 return False
             q.append(now)

@@ -10,10 +10,10 @@
       ],
       "actual_verdict": "LEGITIMATE",
       "reasons": [
-        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
-        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
       ],
-      "sha256": "d0e196a0c25d35dd0a84593cbae0f38333aa58529936444ea26453eab28dfc86",
+      "sha256": "1875b5f405b54786e8de0e1c574cbdce50d27e0d580163d5d830a1de6d11c2e5",
       "internal_ml_prob": 0.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -28,10 +28,10 @@
       ],
       "actual_verdict": "LEGITIMATE",
       "reasons": [
-        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
-        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
       ],
-      "sha256": "a6ad87b96b6f44b6b903d3db0d28b0f75e62c6ec246afd9e218723c6168baad3",
+      "sha256": "ebe995b6116d3f6b4cb65574c04df41161d689d42ad27aea61280e3c31482bb8",
       "internal_ml_prob": 0.0077,
       "internal_homograph": "NONE",
       "passed": true
@@ -46,10 +46,10 @@
       ],
       "actual_verdict": "LEGITIMATE",
       "reasons": [
-        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
-        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
       ],
-      "sha256": "c9b5bd4d9e5de0492ee73b39ed0e595c2112de7796aa1e1c0265cf96c270b842",
+      "sha256": "96e8f924ffcd7084f83d046dd1b58331c0d6d3cf317fb8c327df6a63d6d63b38",
       "internal_ml_prob": 0.0003,
       "internal_homograph": "NONE",
       "passed": true
@@ -64,10 +64,10 @@
       ],
       "actual_verdict": "LEGITIMATE",
       "reasons": [
-        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
-        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
       ],
-      "sha256": "c4553c66be0bce95883633b4034122061877afca4ee47012093ab0dd3a8b99e5",
+      "sha256": "84284775b90cc57d8fb6df3d54ece68a275232b138e48b6812b89e3e3273b5b5",
       "internal_ml_prob": 0.0255,
       "internal_homograph": "NONE",
       "passed": true
@@ -82,10 +82,10 @@
       ],
       "actual_verdict": "LEGITIMATE",
       "reasons": [
-        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
-        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
       ],
-      "sha256": "abb5ddea57c82ce1a6637499144e2496e04e8f356a0fe0e011d69a3ee8f5c776",
+      "sha256": "285ddb6d2870005d80d5588ee5dfa8c1ad33135b3a35a9439bbd1af68b963446",
       "internal_ml_prob": 0.0096,
       "internal_homograph": "NONE",
       "passed": true
@@ -100,10 +100,10 @@
       ],
       "actual_verdict": "LEGITIMATE",
       "reasons": [
-        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
-        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
       ],
-      "sha256": "23c73f27313c7c157556c5f4cb20afc434bc50472ab8cb4f0f8ba4d7cfa3b20f",
+      "sha256": "364ed373161f7c156d9456180091ea53604d6abe6be8206720364c571f161d06",
       "internal_ml_prob": 0.0025,
       "internal_homograph": "NONE",
       "passed": true
@@ -118,10 +118,10 @@
       ],
       "actual_verdict": "LEGITIMATE",
       "reasons": [
-        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
-        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
       ],
-      "sha256": "9a9d50ec8631eafde241ce5b6991ebb9ba74c8543397179e1b589e700bedefd4",
+      "sha256": "2bbc3dee84a589e5051a0916beb377b442377de75977e5d8bcb4c6555f31a172",
       "internal_ml_prob": 0.0063,
       "internal_homograph": "NONE",
       "passed": true
@@ -136,10 +136,10 @@
       ],
       "actual_verdict": "LEGITIMATE",
       "reasons": [
-        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode.",
-        "Cấu trúc định danh và giao thức kết nối phù hợp với trang web hợp lệ."
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
       ],
-      "sha256": "a05b780fb3f9b08c8cf805adb564f1649c7997cc8de24ffa471fab06fa8d6e26",
+      "sha256": "68ce0b4491534a1c11a8e0600d307610e6a3a81c54cb8217c18beee83c4b0180",
       "internal_ml_prob": 0.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -150,14 +150,14 @@
       "description": "Link GitHub repo hợp lệ có path sâu",
       "url_preview": "https://github.com/scikit-learn/scikit-learn",
       "expected": [
-        "LEGITIMATE",
-        "PHISHING"
+        "LEGITIMATE"
       ],
-      "actual_verdict": "PHISHING",
+      "actual_verdict": "LEGITIMATE",
       "reasons": [
-        "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
       ],
-      "sha256": "8e773aa72402b28ae19e382519d01c82f0031bcc60a6b9dc5240473aa99a32e5",
+      "sha256": "637fe37f569699d828a9400099e8492e90ca0a46ea205fbdaaa211e407d63200",
       "internal_ml_prob": 1.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -165,7 +165,7 @@
     {
       "id": "TC-B02",
       "category": "Dataset-Bias",
-      "description": "Link bài báo hợp lệ có số & .html",
+      "description": "Link bài báo ngoài whitelist có số & .html (OOD Bias)",
       "url_preview": "https://vnexpress.net/ai-bao-mat-2026-4819203.html",
       "expected": [
         "LEGITIMATE",
@@ -175,7 +175,7 @@
       "reasons": [
         "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
       ],
-      "sha256": "438647b3acee357e8b437efdfc5b2cf0da9ae7dea987c2b9d8e240909be23a74",
+      "sha256": "943ea0864a3b762ddc855fa3043d10f0567aa6cf4d48874f138e4b599471b3d8",
       "internal_ml_prob": 1.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -186,12 +186,12 @@
       "description": "Link Google Search có query ?q=&hl=",
       "url_preview": "https://www.google.com/search?q=machine+learning&hl=vi",
       "expected": [
-        "LEGITIMATE",
-        "PHISHING"
+        "LEGITIMATE"
       ],
-      "actual_verdict": "PHISHING",
+      "actual_verdict": "LEGITIMATE",
       "reasons": [
-        "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
       ],
       "sha256": "6c4bc6463971e70344417ac4fd7b290ce797813d0218ce7ba9f78e3fe5645a45",
       "internal_ml_prob": 1.0,
@@ -230,7 +230,7 @@
         "Sử dụng trực tiếp địa chỉ IP thay vì tên miền định danh hợp lệ.",
         "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật."
       ],
-      "sha256": "718baaacdde23ea97b1a0390a7abebdeba001d3be802d66d8d500809875322a0",
+      "sha256": "fdcbd8fbd09991140b1cf655d36a5df5e104ae54e3d589097c17a7048281c62a",
       "internal_ml_prob": 1.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -248,7 +248,7 @@
         "Đường dẫn chứa ký tự '@' có thể đánh lừa trình duyệt chuyển hướng sang máy chủ đích khác.",
         "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
       ],
-      "sha256": "8a6cdddeab8ceb2a2998aa9875c71d92bc7d1ba341e31ca34b3dbabb6ac61745",
+      "sha256": "25b234192a895ba33f9b68f3f71e81effb3bf3e638063294c72532eee6047f99",
       "internal_ml_prob": 1.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -266,7 +266,7 @@
         "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật.",
         "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
       ],
-      "sha256": "cc030944f41015476fbd2b378cd67dbfd1894e8d1e75feef8b17db14b27e5538",
+      "sha256": "7e465a2f61db483423d38d7da7f056cc5ac9456dddbc06366b942b9acec29fff",
       "internal_ml_prob": 1.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -284,7 +284,7 @@
         "Đường dẫn chứa cấu trúc chuyển hướng lồng nhau bất thường ('//').",
         "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
       ],
-      "sha256": "24990c8f14947902fa66ec16bd7521b3cad9d37f28291bfe7188740c1ff18b61",
+      "sha256": "94e8a12e289a778ef45aeaeefebee5a014924d5f7964d69697a09bbb5f0fd549",
       "internal_ml_prob": 1.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -336,7 +336,7 @@
       "reasons": [
         "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
       ],
-      "sha256": "fa7daab960f21feb0bd2af7b5922f382800f824a56dd3ca55627dffc6595db29",
+      "sha256": "dbce48934a25a963fcb3cf981e6d684b281da6133ed0fbdcbe4a17ba53cce166",
       "internal_ml_prob": 0.98,
       "internal_homograph": "NONE",
       "passed": true
@@ -355,7 +355,7 @@
         "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật.",
         "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
       ],
-      "sha256": "994dec97454d4351ddca6e3f238c2bcfadce17ea369c87c42090e40939e99ea3",
+      "sha256": "185db9d5f83af6763a550590f2d9aea21fc71796758d3d2ca50b25456d5a7bb3",
       "internal_ml_prob": 1.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -373,7 +373,7 @@
         "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật.",
         "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
       ],
-      "sha256": "31cc8ec43a8365e7444d469549be9cc09fff59e9df0b1cf993090ac7edd56617",
+      "sha256": "7d2df009064e667bc0bb3a22a8788e76a93487521ab6e2e9fa1d26a962d14ef4",
       "internal_ml_prob": 1.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -390,8 +390,25 @@
       "reasons": [
         "Đường dẫn chứa cấu trúc chuyển hướng lồng nhau bất thường ('//')."
       ],
-      "sha256": "23bbe1c1d01238c939875ca549f32974b927761d42171bb29de3a7485235af76",
+      "sha256": "d9415ff904d036fef340d2deae44fb63f5e68893f368915e977d7f561a672eff",
       "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-P12",
+      "category": "Phishing-Schemeless",
+      "description": "Domain lạ gõ tắt không có scheme (www.seedjfly.top)",
+      "url_preview": "www.seedjfly.top",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật."
+      ],
+      "sha256": "d52fc35c1a4868dcaca924592c9b3465e56bdb4745cde75b1abd74226352290c",
+      "internal_ml_prob": 0.9433,
       "internal_homograph": "NONE",
       "passed": true
     },
@@ -407,8 +424,8 @@
       "reasons": [
         "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'cloudflare.com' — phát hiện ký tự đồng hình khác bảng mã: 'α' (Hy Lạp (Greek)) (tên miền thực tế: www.xn--cloudflre-wxg.com)."
       ],
-      "sha256": "7370b555f1802a0b4162692c42e8384fbe8c0687ce9f3a32c3e7436b9f2bfa29",
-      "internal_ml_prob": 0.1267,
+      "sha256": "8fb1320a9ad7913e6e092a1202fdce3ce9e6ac5e40cad082bc6309e20b5722e8",
+      "internal_ml_prob": 1.0,
       "internal_homograph": "HIGH",
       "passed": true
     },
@@ -425,7 +442,7 @@
         "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'google.com' — phát hiện ký tự đồng hình khác bảng mã: 'ο' (Hy Lạp (Greek)), 'ο' (Hy Lạp (Greek)) (tên miền thực tế: www.xn--ggle-0nda.com).",
         "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
       ],
-      "sha256": "73fbc0eb1a8458df24cf7c3e00b7e926df72a3a3b6f7b5d80b27f0f1ab27dea1",
+      "sha256": "32c6a2a87d54b2cfde1c355234e4db279410c7219ec65ea14621fca12648dfc1",
       "internal_ml_prob": 1.0,
       "internal_homograph": "HIGH",
       "passed": true
@@ -442,7 +459,7 @@
       "reasons": [
         "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'paypal.com' — phát hiện ký tự đồng hình khác bảng mã: 'р' (Kirin (Cyrillic)), 'а' (Kirin (Cyrillic)), 'у' (Kirin (Cyrillic)), 'р' (Kirin (Cyrillic)) (tên miền thực tế: www.xn--80aa0cbo65f.com)."
       ],
-      "sha256": "1d889938c258bab71212cc4ae3be65912379248466740a55bb80c667030aeaf4",
+      "sha256": "3af9eb71d14d6a453f8bd2e771fcb5a7effc0f9a5d33cc20346188718c8caf20",
       "internal_ml_prob": 0.8133,
       "internal_homograph": "HIGH",
       "passed": true
@@ -459,7 +476,7 @@
       "reasons": [
         "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'apple.com' — phát hiện ký tự đồng hình khác bảng mã: 'а' (Kirin (Cyrillic)), 'р' (Kirin (Cyrillic)), 'р' (Kirin (Cyrillic)), 'ӏ' (Kirin (Cyrillic)) (tên miền thực tế: www.xn--80ak6aa92e.com)."
       ],
-      "sha256": "8d195a6b7dd486715c60613f7ab1832e288d4e5f516cd4e02f6a626afa27f724",
+      "sha256": "e39e75a54c91df9849b1751a339a6ae2359dc3761c675773b9315b918c2687d9",
       "internal_ml_prob": 0.82,
       "internal_homograph": "HIGH",
       "passed": true
@@ -477,7 +494,7 @@
         "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'google.com' — phát hiện ký tự đồng hình khác bảng mã: 'ο' (Hy Lạp (Greek)), 'ο' (Hy Lạp (Greek)) (tên miền thực tế: www.xn--ggle-0nda.com).",
         "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
       ],
-      "sha256": "73fbc0eb1a8458df24cf7c3e00b7e926df72a3a3b6f7b5d80b27f0f1ab27dea1",
+      "sha256": "32c6a2a87d54b2cfde1c355234e4db279410c7219ec65ea14621fca12648dfc1",
       "internal_ml_prob": 1.0,
       "internal_homograph": "HIGH",
       "passed": true
@@ -494,8 +511,8 @@
       "reasons": [
         "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'apple.com' — phát hiện ký tự đồng hình khác bảng mã: 'а' (Kirin (Cyrillic)), 'р' (Kirin (Cyrillic)), 'р' (Kirin (Cyrillic)), 'ӏ' (Kirin (Cyrillic)) (tên miền thực tế: www.xn--80ak6aa92e.com)."
       ],
-      "sha256": "8d195a6b7dd486715c60613f7ab1832e288d4e5f516cd4e02f6a626afa27f724",
-      "internal_ml_prob": 0.82,
+      "sha256": "e39e75a54c91df9849b1751a339a6ae2359dc3761c675773b9315b918c2687d9",
+      "internal_ml_prob": 1.0,
       "internal_homograph": "HIGH",
       "passed": true
     },
@@ -512,7 +529,7 @@
         "Phát hiện ký tự tàng hình (Zero-Width) chèn ẩn trong tên miền nhằm đánh lừa hiển thị.",
         "Giả mạo tên miền quốc tế (IDN Homograph) — phát hiện ký tự đồng hình khác bảng mã (tên miền thực tế: www.google.com)."
       ],
-      "sha256": "d0e196a0c25d35dd0a84593cbae0f38333aa58529936444ea26453eab28dfc86",
+      "sha256": "6cceb000cc38576e0bb157c216a63e0fed4ea3cc18e76d0ef0604f190a091382",
       "internal_ml_prob": 0.0,
       "internal_homograph": "HIGH",
       "passed": true
@@ -530,7 +547,7 @@
         "Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'vietcombank.com.vn' — phát hiện ký tự đồng hình khác bảng mã: 'ο' (Hy Lạp (Greek)) (tên miền thực tế: xn--vietcmbank-lqh.com.vn).",
         "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
       ],
-      "sha256": "81498a9a205b67a163dbff7166ccd3168d8c6728fc8ee488fa4ba6d6d09f845f",
+      "sha256": "03a4ffa93d549d4265c0e6a6d00f569c68dd0980fa7b8bb6d680e270f135fe8b",
       "internal_ml_prob": 1.0,
       "internal_homograph": "HIGH",
       "passed": true
@@ -548,8 +565,79 @@
         "Giả mạo tên miền quốc tế (IDN Homograph) — phát hiện ký tự đồng hình khác bảng mã: 'а' (Kirin (Cyrillic)) (tên miền thực tế: xn--pple-43d.evil-host.org).",
         "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
       ],
-      "sha256": "6b965cfe50ab0af8d0d2f6dd5cab5f0d75b2ddc51449272e15f1df02e6e835ea",
+      "sha256": "934c5e8e9a0d8078c6fbd3e29df0c3fbd0071c81df602e0d1e11907159728663",
       "internal_ml_prob": 1.0,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H10",
+      "category": "Homograph-IPA",
+      "description": "Ký tự phiên âm IPA ɑ (U+0251) trộn Latin (exɑmple.org)",
+      "url_preview": "https://www.exɑmple.org/login",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Giả mạo tên miền quốc tế (IDN Homograph) — phát hiện ký tự đồng hình khác bảng mã: 'ɑ' (Ký tự phiên âm IPA) (tên miền thực tế: www.xn--exmple-cxc.org).",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "ffdac8f9f41ab09d19a0779704ea964ca09df9f79c80e8a4841fbe2501dbd7b2",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H11",
+      "category": "Typosquat-Subdomain",
+      "description": "Subdomain m. + chữ I hoa giả l (m.paypaI.com)",
+      "url_preview": "https://m.paypaI.com/signin",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Phát hiện tên miền giả mạo thương hiệu 'paypal.com': Thay chữ 'l' thường bằng chữ 'I' hoa (ASCII Homoglyph).",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "8c6cfb72acffb1cd5deb59f82aed004c8502c859ec78d1576ecbf3c83d1dc6de",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H12",
+      "category": "Typosquat-Subdomain",
+      "description": "Subdomain m. + ghép rn giả m (m.rnicrosoft.com)",
+      "url_preview": "https://m.rnicrosoft.com/auth",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Phát hiện tên miền giả mạo thương hiệu 'microsoft.com': Giả mạo thị giác bằng cụm ký tự ASCII tương tự (rn→m / 0→o / 1→l / vv→w).",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "922500a079a83edd2db741cc8bd7d9801e2bdaf6e1986d05a94b34e4b5f2e319",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-H13",
+      "category": "Typosquat-VN",
+      "description": "Typosquatting ví điện tử 4 ký tự (m0mo.vn)",
+      "url_preview": "https://m0mo.vn",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Phát hiện tên miền giả mạo thương hiệu 'momo.vn': Giả mạo thị giác bằng cụm ký tự ASCII tương tự (rn→m / 0→o / 1→l / vv→w)."
+      ],
+      "sha256": "4f6a1817f37856969c7e505b694105ae4e7138d7e8396f8ee3643c4521aebbb9",
+      "internal_ml_prob": 0.9133,
       "internal_homograph": "HIGH",
       "passed": true
     },
@@ -565,7 +653,7 @@
       "reasons": [
         "Sử dụng giao thức URI thực thi hoặc nhúng nội dung trực tiếp không an toàn (javascript:)."
       ],
-      "sha256": "6ddf33edc276c79c72c6ec19f52ed5175abf9a472b231784602c780d711219fa",
+      "sha256": "46ee08efb9fdb83e71673360d8a57945a7e4d4ac433289f0c3a4927855333fe4",
       "internal_ml_prob": 0.9967,
       "internal_homograph": "HIGH",
       "passed": true
@@ -582,7 +670,7 @@
       "reasons": [
         "Sử dụng giao thức URI thực thi hoặc nhúng nội dung trực tiếp không an toàn (data:)."
       ],
-      "sha256": "03a1d4e848444bb3c1e1da2c65d63f7e5b875b771c838b20bd1331b01d967c91",
+      "sha256": "698294f522aa7133bd40e36f971b11141cc4388abc89145399cfa6a050b44f12",
       "internal_ml_prob": 0.97,
       "internal_homograph": "HIGH",
       "passed": true
@@ -633,9 +721,9 @@
       "reasons": [
         "Kết nối sử dụng giao thức HTTP không được mã hóa bảo mật."
       ],
-      "sha256": "0e52b63fb7ec537ba0d9bd68f2c036f978cff1033f4651c4e4993dead6215eb5",
+      "sha256": "8b6977f06ef2b73486164eefb7df0baa60d5962261165ec5dba3abd64e3d37d5",
       "internal_ml_prob": 1.0,
-      "internal_homograph": "NONE",
+      "internal_homograph": "HIGH",
       "passed": true
     },
     {
@@ -668,7 +756,93 @@
       "reasons": [
         "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
       ],
-      "sha256": "11b951515d7b7026edf0889c30bb0259f864223e1a935997d2718f5dca9784c1",
+      "sha256": "b60bbeb0b3b10254959e295489b9e5edfec98372496b1f08ce24dca44d9584bd",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-M08",
+      "category": "RedTeam-SchemeTab",
+      "description": "Chèn ký tự tab ẩn trong java\\tscript:alert(1)",
+      "url_preview": "java\tscript:alert(1)",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Sử dụng giao thức URI thực thi hoặc nhúng nội dung trực tiếp không an toàn (javascript:)."
+      ],
+      "sha256": "ee775e38058544d66d6e9bc5a2377e852605fa10243563bfbbfc7f79cfc8add2",
+      "internal_ml_prob": 0.9967,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-M09",
+      "category": "RedTeam-DoubleEncode",
+      "description": "Open-Redirect mã hóa 2 lớp %253A%252F%252F",
+      "url_preview": "https://www.google.com/accounts?continueUrl=https%253A%252F%252Fevil.xyz",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Tham số truy vấn chứa đường dẫn chuyển hướng mở (Open Redirect) dẫn sang một địa chỉ bên ngoài.",
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "008f27120680c657f30d7482bf69952d1288c75a17ec8a37afb32e88253f71d2",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "HIGH",
+      "passed": true
+    },
+    {
+      "id": "TC-M10",
+      "category": "RedTeam-DotSegment",
+      "description": "Dot-segment /./forms/ vượt mặt prefix Google Forms",
+      "url_preview": "https://docs.google.com/./forms/d/e/1FAIpQLSe9988/viewform",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
+      ],
+      "sha256": "369de489a5efc835345d61d56fc9bebb887dd3c7ee48fc8ffd3b145964ef0ed6",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-M11",
+      "category": "RedTeam-CustomPort",
+      "description": "Cổng lạ :8443 trên tên miền giáo dục .edu.vn",
+      "url_preview": "https://portal.huit.edu.vn:8443/student",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Hình thái cấu trúc và độ phức tạp của đường dẫn mang đặc trưng của liên kết lừa đảo (Phishing)."
+      ],
+      "sha256": "ee712c3803f4288fba4ea3897966dd00c75d44f75125cbf25dffdd002bff29b8",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-M12",
+      "category": "RedTeam-EduPhish",
+      "description": "Subdomain .edu.vn bị chiếm quyền dựng trang login/verify",
+      "url_preview": "https://compromised.huit.edu.vn/webmail-auth/login.php",
+      "expected": [
+        "PHISHING"
+      ],
+      "actual_verdict": "PHISHING",
+      "reasons": [
+        "Đường dẫn chứa từ khóa nhạy cảm thường xuất hiện ở trang giả mạo đăng nhập / xác thực tài khoản."
+      ],
+      "sha256": "dd1d4bfbbaa98800becbf91f0dce478ddfa2f84075f5f1b0c634291fd886a3aa",
       "internal_ml_prob": 1.0,
       "internal_homograph": "NONE",
       "passed": true
@@ -691,13 +865,13 @@
       "id": "TC-S03",
       "name": "Cơ chế VirusTotal: Quét mới -> Lưu SHA-256 -> Dán mã SHA-256 tra cứu lại -> Phân tích lại",
       "passed": true,
-      "detail": "hash=7370b555f1802a0b..., by_hash_cache=True, reason=Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'cloudflare.com' — phát hiện ký tự đồng hình khác bảng mã: 'α' (Hy Lạp (Greek)) (tên miền thực tế: www.xn--cloudflre-wxg.com)."
+      "detail": "hash=8fb1320a9ad7913e..., by_hash_cache=True, reason=Giả mạo tên miền quốc tế (IDN Homograph) nhằm giả mạo 'cloudflare.com' — phát hiện ký tự đồng hình khác bảng mã: 'α' (Hy Lạp (Greek)) (tên miền thực tế: www.xn--cloudflre-wxg.com)."
     },
     {
       "id": "TC-S04",
-      "name": "Lịch sử lưu trữ ẩn tham số nhạy cảm (?token=...) thành ?[...]",
+      "name": "Lịch sử lưu trữ ẩn tham số nhạy cảm (?token=...) và token đường dẫn entropy cao thành [...]",
       "passed": true,
-      "detail": "History count=10, Token leaked=False"
+      "detail": "History count=10, QueryLeaked=False, PathTokenLeaked=False"
     },
     {
       "id": "TC-S05",
@@ -707,9 +881,21 @@
     },
     {
       "id": "TC-S06",
-      "name": "Chặn quét tự động (Rate Limit ngầm) không lộ con số quota",
+      "name": "Chặn quét tự động (60 req/phút) tách biệt khỏi /api/history, không lộ con số quota",
       "passed": true,
-      "detail": "Req 36=429"
+      "detail": "Req 61=429, HistoryWhenCheckLimited=200"
+    },
+    {
+      "id": "TC-S07",
+      "name": "Chống đầu độc bộ nhớ đệm SHA-256 (Zero-Width / @ / \\ tách biệt hash) & giữ nguyên chữ 'I' hoa đỏ",
+      "passed": true,
+      "detail": "google_cached=LEGITIMATE, unique_hashes=4/4, paypaI_flagged=['I']"
+    },
+    {
+      "id": "TC-S08",
+      "name": "Đầy đủ HTTP Security Headers (CSP, X-Frame-Options: DENY, X-Content-Type-Options: nosniff)",
+      "passed": true,
+      "detail": "XFO=DENY, XCTO=nosniff, CSP_ok=True"
     }
   ]
 }

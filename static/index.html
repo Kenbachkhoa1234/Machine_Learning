@@ -383,6 +383,8 @@
           id="urlField"
           class="url-box"
           type="text"
+          maxlength="4096"
+          aria-label="Nhập địa chỉ URL hoặc mã băm SHA-256"
           placeholder="Dán URL (https://...) hoặc mã SHA-256..."
           autocomplete="off"
           spellcheck="false"
@@ -424,7 +426,7 @@
       return highlights
         .map(item =>
           item.flagged
-            ? `<span class="flagged-char" title="Ký tự khác bảng mã chuẩn">${escapeHtml(item.char)}</span>`
+            ? `<span class="flagged-char" title="Ký tự giả mạo hoặc khác bảng mã chuẩn">${escapeHtml(item.char)}</span>`
             : escapeHtml(item.char)
         )
         .join("");
@@ -493,8 +495,9 @@
         d.punycode_host &&
         d.unicode_host !== d.punycode_host;
 
+      const punyLabel = d.punycode_host && d.punycode_host.includes("xn--") ? "Punycode" : "ASCII gốc";
       const punycodeNote = hasSpoofedHost
-        ? `<span style="color:var(--muted); font-size:0.8rem;">Punycode: <code>${escapeHtml(d.punycode_host)}</code></span>`
+        ? `<span style="color:var(--muted); font-size:0.8rem;">${punyLabel}: <code>${escapeHtml(d.punycode_host)}</code></span>`
         : "";
 
       box.className = `result ${verdict}`;
@@ -525,7 +528,7 @@
 
         <div class="fingerprint-grid">
           <div class="fp-item" style="grid-column: 1 / -1;">
-            <span>Mã định danh bản ghi (SHA-256) <button type="button" class="btn-ghost" style="padding:2px 8px; margin-left:6px; font-size:0.7rem;" onclick="copyHash('${escapeHtml(d.sha256)}')">Copy</button></span>
+            <span>Mã định danh bản ghi (SHA-256) <button type="button" class="btn-ghost" style="padding:2px 8px; margin-left:6px; font-size:0.7rem;" onclick="copyHash('${escapeHtml(d.sha256)}', this)">Copy</button></span>
             <code>${escapeHtml(d.sha256)}</code>
           </div>
           <div class="fp-item">
@@ -547,8 +550,31 @@
       }
     }
 
-    function copyHash(hash) {
-      navigator.clipboard?.writeText(hash);
+    async function copyHash(hash, btnEl) {
+      let copied = false;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(hash);
+          copied = true;
+        }
+      } catch (_e) {}
+
+      if (!copied) {
+        const ta = document.createElement("textarea");
+        ta.value = hash;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { copied = document.execCommand("copy"); } catch (_e) {}
+        document.body.removeChild(ta);
+      }
+
+      if (btnEl && copied) {
+        const orig = btnEl.textContent;
+        btnEl.textContent = "Đã chép ✓";
+        setTimeout(() => { btnEl.textContent = orig; }, 1500);
+      }
     }
 
     function lookupSavedHash(hash) {
@@ -570,17 +596,24 @@
           return;
         }
         container.innerHTML = items
-          .map(
-            item => `
+          .map(item => {
+            const showPuny =
+              item.punycode_host &&
+              item.unicode_host &&
+              item.punycode_host !== item.unicode_host.toLowerCase();
+            const punySuffix = showPuny
+              ? ` <span style="color:var(--muted); font-size:0.76rem;">(${escapeHtml(item.punycode_host)})</span>`
+              : "";
+            return `
             <div class="history-row" onclick="lookupSavedHash('${escapeHtml(item.url_hash)}')" title="Bấm để mở lại báo cáo từ SHA-256">
               <div class="history-left">
-                <div class="history-target">${escapeHtml(item.target_display)}</div>
+                <div class="history-target">${escapeHtml(item.target_display)}${punySuffix}</div>
                 <div class="history-hash">SHA-256: ${escapeHtml(item.url_hash.slice(0, 24))}... · Lượt tra cứu: ${escapeHtml(item.hit_count)}</div>
               </div>
               <span class="mini-tag ${escapeHtml(item.verdict)}">${escapeHtml(item.verdict)}</span>
             </div>
-          `
-          )
+          `;
+          })
           .join("");
       } catch (_e) {}
     }

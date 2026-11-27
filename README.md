@@ -18,17 +18,21 @@
 
 ---
 
-## 🛡️ Tính năng hệ thống Demo
+## 🛡️ Tính năng hệ thống & Kết quả Thực nghiệm
 
-- **Phát hiện Phishing kết hợp ngầm**:
-  - Chuẩn hóa URL theo RFC 3986 và kiểm tra **IDN Homograph 2 chiều (`idna`)**: phát hiện giả mạo ký tự Latin bằng bảng chữ **Hy Lạp / Cyrillic**, ký tự tàng hình **Zero-Width**, Punycode `xn--`, và giao thức URI nguy hiểm (`javascript:`, `data:`).
-  - Mô hình **Random Forest (27 lexical features)** huấn luyện trên bộ **PhiUSIIL** (`phishing_url_model.pkl` đi kèm sẵn trong repo — không cần train lại).
-- **Nhận định phân tích an toàn (Chống lách luật)**:
-  - Nêu rõ dấu hiệu rủi ro cho người dùng (tô sáng ký tự giả mạo trên tên miền, hiển thị Punycode thực tế, IP trực tiếp, thiếu HTTPS...) nhưng **ẩn hoàn toàn** kiến trúc mô hình, trọng số, danh sách 27 features và ngưỡng quyết định ở phía server; tắt `/docs` & `/openapi.json` kèm giới hạn tốc độ quét ngầm.
-- **Lưu trữ & Tra cứu ngược `SHA-256` kiểu VirusTotal**:
-  - Mỗi URL sau khi kiểm tra được băm `SHA-256` lưu vào cơ sở dữ liệu lịch sử (`threat_cache.db`, tự động che tham số nhạy cảm `?[...]`).
-  - Cho phép **dán ngược mã `SHA-256` vào ô tìm kiếm** hoặc chọn từ danh sách lịch sử để xem lại báo cáo kèm nút **Phân tích lại**.
-- **Bộ kiểm thử tự động 44/44 PASS**: Xem chi tiết tại [docs/qa_test_report.md](./docs/qa_test_report.md) và [tests/run_qa_suite.py](./tests/run_qa_suite.py).
+- **Phát hiện Phishing đa tầng chạy ngầm**:
+  - Chuẩn hóa URL theo RFC 3986 và kiểm tra **IDN Homograph 2 chiều (`idna`) + UTS #39 Skeleton**: phát hiện giả mạo ký tự Latin bằng bảng chữ **Hy Lạp (`α`, `ο`), Cyrillic, phiên âm IPA (`ɑ`), chữ số La Mã (`ⅼ`), Latin có dấu (`ạ`)**, ký tự tàng hình **Zero-Width (`U+200B`)**, Punycode `xn--`, bẫy thị giác ASCII trên mọi subdomain (`m.paypaI.com`, `m.rnicrosoft.com`, `g00gle.com`), **Open-Redirect** mã hóa nhiều lớp, **Backslash `\`**, đuôi `.zip/.mov` và giao thức nguy hiểm (`javascript:`, `data:`).
+  - Mô hình **Random Forest (27 lexical features)** huấn luyện trên bộ **PhiUSIIL** (`phishing_url_model.pkl` đi kèm sẵn trong repo — tối ưu suy luận mảng `numpy.float32`, không cần train lại).
+- **Nhận định phân tích an toàn (Chống dò mô hình / Anti-Evasion)**:
+  - Nêu rõ dấu hiệu rủi ro bằng ngôn ngữ dễ hiểu, tô đỏ đúng ký tự giả mạo trên tên miền và hiển thị Punycode/ASCII gốc nhưng **ẩn hoàn toàn** kiến trúc mô hình, trọng số, danh sách 27 features và ngưỡng quyết định ở phía server.
+  - Tắt `/docs`, `/redoc`, `/openapi.json` (`HTTP 404`), trang bị đầy đủ **HTTP Security Headers** (`CSP`, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`) và bộ giới hạn tốc độ LRU chống tràn bộ nhớ.
+- **Lưu trữ & Tra cứu ngược `SHA-256` chống đụng độ kiểu VirusTotal**:
+  - Lưu lịch sử quét trên **SQLite WAL** bằng khóa băm `SHA-256` chống đầu độc cache (tách biệt tuyệt đối URL sạch với biến thể chèn `Zero-Width`, `@`, `\`, hoặc chữ `'I'` hoa giả mạo; tự động ẩn tham số nhạy cảm `?[...]` và token đường dẫn entropy cao).
+  - Hỗ trợ **dán ngược mã `SHA-256` vào ô tìm kiếm** hoặc chọn từ bảng lịch sử để mở lại báo cáo kèm nút **Phân tích lại**.
+- **Kiểm chứng thực nghiệm độc lập**:
+  - **10.000 URL Held-Out Test (PhiUSIIL)**: Bắt đúng **9.957 / 10.000 URL (`99,57%`)**, `F1 = 99,495%` — xem [docs/phd_evaluation_report.md](./docs/phd_evaluation_report.md).
+  - **56 Kịch bản Thực chiến & OOD**: Đạt **55 / 56 (`98,2%`)**, tăng `+42,8` điểm phần trăm so với mô hình thô (`55,4%`).
+  - **Bộ kiểm thử QA & Red-Team tự động**: **56 / 56 PASS (`100%`)** — xem [docs/qa_test_report.md](./docs/qa_test_report.md).
 
 ---
 
@@ -36,19 +40,23 @@
 
 ```text
 .
-├── app.py                              # FastAPI server (URL check, SHA-256 lookup & history)
-├── homograph_guard.py                  # Kiểm tra IDN Homograph / Hy Lạp / Cyrillic / Punycode
-├── security_store.py                   # Lưu trữ lịch sử SHA-256 (SQLite) & Rate Limiter
+├── app.py                              # FastAPI server (URL check, SHA-256 lookup, CSP headers)
+├── homograph_guard.py                  # Kiểm tra IDN Homograph, IPA, eTLD+1 Typosquat & 10-gate Context
+├── security_store.py                   # Lưu trữ SHA-256 chống đụng độ (SQLite WAL) & LRU Rate Limiter
 ├── url_features.py                     # Trích xuất 27 lexical features
-├── phishing_url_model.pkl              # Mô hình Random Forest đã huấn luyện
+├── phishing_url_model.pkl              # Mô hình Random Forest đã huấn luyện (scikit-learn 1.6.1)
 ├── model_features.json                 # Metadata thứ tự 27 features
 ├── static/
 │   └── index.html                      # Giao diện Web URL Security Checker
 ├── tests/
-│   ├── run_qa_suite.py                 # Bộ 44 test cases tự động (URL + Bảo mật)
-│   └── qa_results.json                 # Kết quả chạy kiểm thử
+│   ├── run_qa_suite.py                 # Bộ 56 test cases tự động (48 URL + 8 Security/Red-Team)
+│   ├── benchmark_10k_and_ood.py        # Benchmark 10.000 URL Held-Out + 56 ca OOD thực chiến
+│   ├── check_live_demo.py              # Script kiểm tra nhanh server đang chạy tại 127.0.0.1:8000
+│   ├── qa_results.json                 # Kết quả chạy kiểm thử QA
+│   └── phd_benchmark_results.json      # Số liệu thực nghiệm 10.000 URL & OOD
 ├── docs/
-│   ├── qa_test_report.md               # Báo cáo kiểm thử chi tiết
+│   ├── phd_evaluation_report.md        # Báo cáo đánh giá thực nghiệm & phân tích giới hạn khoa học
+│   ├── qa_test_report.md               # Báo cáo kiểm thử QA & Red-Team chi tiết
 │   └── demo_screenshot.png             # Ảnh chụp giao diện thực tế
 ├── notebooks/
 │   └── Copy_of_hocmay_hoanchinh.ipynb  # Notebook huấn luyện & đánh giá trên Colab
@@ -66,7 +74,8 @@ python app.py
 ```
 
 - Mở trình duyệt tại: `http://127.0.0.1:8000`
-- Chạy bộ kiểm thử tự động: `python tests/run_qa_suite.py`
+- Chạy bộ kiểm thử QA & Red-Team (56 cases): `python tests/run_qa_suite.py`
+- Chạy kiểm tra trực tiếp server live: `python tests/check_live_demo.py`
 
 ---
 
