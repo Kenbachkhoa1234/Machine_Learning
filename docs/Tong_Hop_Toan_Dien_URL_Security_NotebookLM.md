@@ -1,21 +1,8 @@
 # TÀI LIỆU TỔNG HỢP TOÀN DIỆN ĐỒ ÁN: PHÁT HIỆN ĐƯỜNG DẪN LỪA ĐẢO (PHISHING URL DETECTION) & HỆ THỐNG WEB DEMO "URL SECURITY"
 
-## 1. Thông tin chung về Đồ án & Nhóm thực hiện
-- **Tên đề tài**: *Machine Learning in URL Detection* — Nghiên cứu, huấn luyện mô hình Học máy phát hiện liên kết lừa đảo (Phishing URL) và xây dựng hệ thống kiểm thực thực chiến **URL Security**.
-- **Môn học**: Học máy cho bảo mật (*Machine Learning for Security*).
-- **Trường**: Trường Đại học Công Thương TP.HCM (HUIT).
-- **Giảng viên hướng dẫn (GVHD)**: ThS. Hoàng Quốc Việt.
-- **Nhóm thực hiện — Nhóm 6**:
-  1. Nguyễn Văn Thiên Phúc — MSSV: `2033230230`
-  2. Nguyễn Văn Khanh — MSSV: `2033222040`
-  3. Nguyễn Minh Vũ — MSSV: `2033230328`
-  4. Võ Thị Thùy Trang — MSSV: `2033230303`
-  5. Trần Thị Thảo Vy — MSSV: `2033230334`
-- **Hệ sinh thái tài nguyên dự án**:
-  - Mã nguồn & Web Demo GitHub: https://github.com/Kenbachkhoa1234/Machine_Learning
-  - Bộ dữ liệu gốc (PhiUSIIL Phishing URL Dataset trên Kaggle): https://www.kaggle.com/datasets/ndarvind/phiusiil-phishing-url-dataset
-  - Google Colab Notebook huấn luyện: https://colab.research.google.com/drive/1FES0v_ukQRNdw4bNZ7Bi8VvQHlxh6P3t?usp=sharing
-  - Thư mục lưu trữ Dữ liệu & Mô hình (`phishing_url_model.pkl`): https://drive.google.com/drive/u/1/folders/1uh-qkfegs4C7mHjJRMV7WXnLds2AVOvU
+## 1. Giới thiệu Đề tài
+- **Đề tài**: *Machine Learning in URL Detection* — Ứng dụng Học máy phát hiện liên kết lừa đảo (Phishing URL) và xây dựng hệ thống kiểm tra an toàn đường dẫn **URL Security**.
+- **Mục tiêu trọng tâm**: Giải quyết bài toán phát hiện sớm các đường dẫn độc hại chỉ từ chuỗi ký tự URL mà không cần tải nội dung trang đích, đồng thời khắc phục triệt để hiện tượng thiên lệch dữ liệu và các kỹ thuật giả mạo thị giác ngoài thực tế.
 
 ---
 
