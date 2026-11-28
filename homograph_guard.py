@@ -1,10 +1,10 @@
-"""Hardened Two-Way IDNA, Homograph, eTLD+1 Typosquatting, Multi-Decode Open-Redirect & Domain Guard."""
+"""Hardened Two-Way IDNA, Homograph, eTLD+1 Typosquatting, Same-Root OAuth & Domain Context Guard."""
 
 import ipaddress
 import posixpath
 import re
 import unicodedata
-from urllib.parse import unquote, unquote_plus, urlsplit, urlunsplit
+from urllib.parse import unquote_plus, urlsplit, urlunsplit
 
 # High-frequency confusable characters (Greek, Cyrillic, IPA, Phonetic, Roman numerals) -> ASCII skeleton
 CONFUSABLE_MAP = {
@@ -80,10 +80,11 @@ ASCII_CTRL_WHITESPACE_RE = re.compile(r"[\x00-\x20]+")
 
 DANGEROUS_SCHEMES = ("javascript:", "data:", "vbscript:", "file:")
 BENIGN_ANCHOR_RE = re.compile(r"^[A-Za-z0-9_\-]{1,24}$")
-OPEN_REDIRECT_RE = re.compile(
-    r"(?:^|[?&])(?:url|redirect|redirect_uri|redirect_url|redir|next|continue|continueurl|return|returnurl|return_to|goto|dest|destination|target|out|view|uri|callback|q|u)=[\s+]*?(?:https?:|[\\/]{2})",
+OPEN_REDIRECT_PARAM_RE = re.compile(
+    r"(?:^|[?&])(?:url|redirect|redirect_uri|redirect_url|redir|next|continue|continueurl|return|returnurl|return_to|goto|dest|destination|target|out|view|uri|callback|q|u)=([^&#]*)",
     re.IGNORECASE,
 )
+EXTERNAL_SCHEME_HEAD_RE = re.compile(r"^[\s+]*(?:https?:|[\\/]{2})", re.IGNORECASE)
 INJECTION_PATTERN_RE = re.compile(
     r"(?:<script|onerror\s*=|onload\s*=|javascript:|'\s*or\s*'1'\s*=\s*'1|union\s+select)",
     re.IGNORECASE,
@@ -102,7 +103,7 @@ MULTI_PART_PUBLIC_SUFFIXES = (
 
 PROTECTED_BRANDS = {
     "google.com", "youtube.com", "gmail.com", "facebook.com", "instagram.com",
-    "whatsapp.com", "paypal.com", "apple.com", "icloud.com", "microsoft.com",
+    "whatsapp.com", "paypal.com", "apple.com", "icloud.com", "microsoft.com", "microsoftonline.com",
     "office.com", "live.com", "amazon.com", "netflix.com", "github.com",
     "linkedin.com", "twitter.com", "x.com", "binance.com", "coinbase.com",
     "cloudflare.com", "discord.com", "telegram.org", "steampowered.com", "openai.com",
@@ -126,7 +127,7 @@ SHARED_USER_CONTENT_HOSTS = (
 
 # Verified first-party domains eligible for deep-path bias calibration ONLY when all 10 anti-abuse gates pass
 VERIFIED_OFFICIAL_DOMAINS = {
-    "google.com", "youtube.com", "github.com", "microsoft.com", "office.com", "apple.com",
+    "google.com", "youtube.com", "github.com", "microsoft.com", "microsoftonline.com", "office.com", "apple.com",
     "cloudflare.com", "wikipedia.org", "python.org", "scikit-learn.org", "pytorch.org",
     "kaggle.com", "canva.com", "openai.com", "linkedin.com", "stackoverflow.com", "mozilla.org", "ubuntu.com",
     "paypal.com", "amazon.com", "facebook.com", "instagram.com", "whatsapp.com", "netflix.com",
@@ -252,7 +253,6 @@ def _detect_ascii_typosquat(raw_case_host: str, punycode_host: str) -> tuple[str
         if punycode_host == brand or punycode_host.endswith(dot_brand):
             return None, None, set()
 
-    # Check mixed-case 'I' masquerading as 'l' in ANY label of raw_case_host (e.g. m.paypaI.com, paypaI.com)
     case_indices: set[int] = set()
     offset = 0
     for label in raw_case_host.split("."):
@@ -266,7 +266,6 @@ def _detect_ascii_typosquat(raw_case_host: str, punycode_host: str) -> tuple[str
                     return brand, "Thay chữ 'l' thường bằng chữ 'I' hoa (ASCII Homoglyph)", case_indices
         offset += len(label) + 1
 
-    # Extract eTLD+1 registrable domain (works for m.rnicrosoft.com, login.g00gle.com, etc.)
     sld, reg_domain = _extract_etld_plus_1(punycode_host)
     if not sld:
         return None, None, set()
@@ -338,7 +337,6 @@ def _check_verified_official_context(
         if punycode_host == shared or punycode_host.endswith("." + shared):
             return False
 
-    # Canonicalize dot-segments (/./forms -> /forms) and percent-encoding (/%66orms -> /forms)
     decoded_path = _multi_unquote(path or "/", rounds=2).replace("\\", "/")
     norm_path = posixpath.normpath(decoded_path).lower()
     if not norm_path.startswith("/"):
@@ -348,7 +346,6 @@ def _check_verified_official_context(
         if norm_path == prefix or norm_path.startswith(prefix + "/"):
             return False
 
-    # Compromised institutional subdomain or Canva design-slug phishing guard
     if any(punycode_host.endswith(suf) for suf in VERIFIED_INSTITUTIONAL_SUFFIXES):
         if INSTITUTIONAL_PHISH_PATH_RE.search(norm_path):
             return False
@@ -364,10 +361,51 @@ def _check_verified_official_context(
     return False
 
 
+def _has_external_open_redirect(query: str, source_punycode_host: str) -> bool:
+    """Return True if query contains a redirect to an external or untrusted target (allows verified same-root OAuth)."""
+    if not query:
+        return False
+    decoded_query = _multi_unquote(query, rounds=3)
+    src_is_clean = _is_known_clean_domain(source_punycode_host)
+    src_reg = _extract_etld_plus_1(source_punycode_host)[1] if source_punycode_host else ""
+
+    for m in OPEN_REDIRECT_PARAM_RE.finditer("?" + decoded_query):
+        raw_val = m.group(1)
+        if not EXTERNAL_SCHEME_HEAD_RE.match(raw_val):
+            continue
+        target_val = raw_val.lstrip(" \t+")
+        # Allow strictly HTTPS same-registrable-domain OAuth redirect (e.g. signin.aws.amazon.com -> console.aws.amazon.com)
+        if src_is_clean and target_val.lower().startswith("https://") and "\\" not in target_val and "@" not in target_val:
+            try:
+                tp = urlsplit(target_val)
+                thost = (tp.hostname or "").strip().lower()
+                tport = tp.port
+                if (
+                    thost
+                    and _extract_etld_plus_1(thost)[1] == src_reg
+                    and not (tp.query and OPEN_REDIRECT_PARAM_RE.search("?" + tp.query))
+                    and _check_verified_official_context(
+                        scheme="https",
+                        had_explicit_http=False,
+                        port=tport,
+                        punycode_host=thost,
+                        path=tp.path or "/",
+                        raw_url=target_val,
+                        homograph_risk="NONE",
+                        has_backslash=False,
+                        has_open_redirect=False,
+                    )
+                ):
+                    continue
+            except ValueError:
+                return True
+        return True
+    return False
+
+
 def analyze_url_homograph(url: str) -> dict:
-    """Inspect URL hostname using 2-way IDNA, eTLD+1 typosquatting, multi-unquote redirect, and Unicode X-Ray."""
+    """Inspect URL hostname using 2-way IDNA, eTLD+1 typosquatting, same-root OAuth check, and Unicode X-Ray."""
     raw = str(url).strip()
-    # Strip ASCII control/whitespace before checking dangerous schemes (defeats 'java\tscript:')
     compact_lower = ASCII_CTRL_WHITESPACE_RE.sub("", raw).lower()
 
     if compact_lower.startswith(DANGEROUS_SCHEMES):
@@ -442,8 +480,6 @@ def analyze_url_homograph(url: str) -> dict:
     except (ValueError, TypeError):
         scheme, raw_case_hostname, raw_hostname, path, query, fragment, userinfo, port_str = "", "", "", "", "", "", "", ""
 
-    decoded_query = _multi_unquote(query, rounds=3) if query else ""
-    has_open_redirect = bool(OPEN_REDIRECT_RE.search("?" + decoded_query)) if decoded_query else False
     suspicious_file_tld = raw_hostname.endswith(FILE_LIKE_TLDS)
 
     clean_for_idna = "".join(c for c in raw_hostname if c not in ZERO_WIDTH_CHARS)
@@ -465,14 +501,13 @@ def analyze_url_homograph(url: str) -> dict:
             except Exception:
                 idna_error = True
 
-    # Only default missing scheme to 'https' for known verified domains (prevents scheme-less phishing like www.seedjfly.top from escaping!)
+    has_open_redirect = _has_external_open_redirect(query, punycode_host)
     is_known_clean = _is_known_clean_domain(punycode_host)
     if not scheme:
         scheme = "https" if is_known_clean else "http"
 
     if raw_hostname:
         if not has_explicit_scheme and not is_known_clean:
-            # Keep raw scheme-less string for ML so unknown domains like 'www.seedjfly.top' retain has_https=0
             normalized_url = raw
         else:
             host_netloc = f"[{punycode_host}]" if ":" in punycode_host else punycode_host
@@ -491,7 +526,6 @@ def analyze_url_homograph(url: str) -> dict:
         if typosquat_brand:
             spoofed_brand = typosquat_brand
 
-    # Preserve raw case in display_hostname when mixed-case ASCII homoglyph (e.g. paypaI.com) is detected
     display_host = raw_case_hostname if case_spoof_indices else unicode_host
 
     char_xray = []
@@ -539,7 +573,6 @@ def analyze_url_homograph(url: str) -> dict:
             for c in label
             if _classify_char_script(c)[0] not in {"ASCII_SYMBOL"}
         }
-        # Flag mixing ASCII LATIN with GREEK/CYRILLIC/IPA/OTHER, or mixing LATIN_EXT on commercial ASCII TLDs (.com/.org/.net/.io)
         if len(label_scripts - {"LATIN_EXT"}) > 1 or (
             "LATIN_EXT" in label_scripts
             and "LATIN" in label_scripts
@@ -547,7 +580,6 @@ def analyze_url_homograph(url: str) -> dict:
         ):
             mixed_labels.append({"label": label, "scripts": sorted(label_scripts)})
 
-    # Highlight LATIN_EXT chars too if label was flagged as mixed-script on commercial TLD
     if mixed_labels:
         for c_item in char_xray:
             if c_item["script"] == "LATIN_EXT":

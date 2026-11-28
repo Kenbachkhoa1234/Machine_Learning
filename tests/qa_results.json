@@ -199,6 +199,42 @@
       "passed": true
     },
     {
+      "id": "TC-B04",
+      "category": "OAuth-SSO",
+      "description": "Cổng Microsoft Entra ID OAuth2 thật dài >110 ký tự",
+      "url_preview": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=00000003-0000-0ff1-...",
+      "expected": [
+        "LEGITIMATE"
+      ],
+      "actual_verdict": "LEGITIMATE",
+      "reasons": [
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
+      ],
+      "sha256": "248c287f245abc83191274ae8b3bbee6efddc2f54c822da9f75ac2c48667893d",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
+      "id": "TC-B05",
+      "category": "OAuth-SameRoot",
+      "description": "AWS Signin có redirect_uri nội bộ cùng amazon.com",
+      "url_preview": "https://us-east-1.signin.aws.amazon.com/oauth?Action=login&redirect_uri=https%3A%2F%2Fconsol...",
+      "expected": [
+        "LEGITIMATE"
+      ],
+      "actual_verdict": "LEGITIMATE",
+      "reasons": [
+        "Tên miền sử dụng bảng ký tự chuẩn, không phát hiện dấu hiệu giả mạo IDN / Punycode hay Typosquatting.",
+        "Cấu trúc định danh và giao thức mã hóa HTTPS hợp lệ."
+      ],
+      "sha256": "a65a00b8f2ddafc37fcf391ac9a70b20c4b88a012ef4893809fb61543e25479a",
+      "internal_ml_prob": 1.0,
+      "internal_homograph": "NONE",
+      "passed": true
+    },
+    {
       "id": "TC-P01",
       "category": "Phishing-Lexical",
       "description": "IPv4 trực tiếp + login/verify",

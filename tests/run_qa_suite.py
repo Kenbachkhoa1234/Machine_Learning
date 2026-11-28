@@ -34,6 +34,8 @@ URL_TEST_CASES = [
     ("TC-B01", "Dataset-Bias", "Link GitHub repo hợp lệ có path sâu", "https://github.com/scikit-learn/scikit-learn", {"LEGITIMATE"}),
     ("TC-B02", "Dataset-Bias", "Link bài báo ngoài whitelist có số & .html (OOD Bias)", "https://vnexpress.net/ai-bao-mat-2026-4819203.html", {"PHISHING", "LEGITIMATE"}),
     ("TC-B03", "Dataset-Bias", "Link Google Search có query ?q=&hl=", "https://www.google.com/search?q=machine+learning&hl=vi", {"LEGITIMATE"}),
+    ("TC-B04", "OAuth-SSO", "Cổng Microsoft Entra ID OAuth2 thật dài >110 ký tự", "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=00000003-0000-0ff1-ce00&response_type=code", {"LEGITIMATE"}),
+    ("TC-B05", "OAuth-SameRoot", "AWS Signin có redirect_uri nội bộ cùng amazon.com", "https://us-east-1.signin.aws.amazon.com/oauth?Action=login&redirect_uri=https%3A%2F%2Fconsole.aws.amazon.com%2F", {"LEGITIMATE"}),
 
     # --- Nhóm 3: Phishing cổ điển & kỹ thuật che giấu lexical ---
     ("TC-P01", "Phishing-Lexical", "IPv4 trực tiếp + login/verify", "http://192.168.1.1/secure-login/verify-account.php?id=9981", {"PHISHING"}),
