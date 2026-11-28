@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>URL Security Checker</title>
+  <title>URL Security</title>
   <style>
     :root {
       --bg: #070c18;
@@ -42,32 +42,21 @@
     }
 
     .header {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
-    .shield {
-      width: 52px;
-      height: 52px;
-      margin: 0 auto 14px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #0284c7, #10b981);
-      display: grid;
-      place-items: center;
-      font-size: 24px;
-      box-shadow: 0 8px 28px rgba(14, 165, 233, 0.25);
+      margin-bottom: 24px;
     }
 
     .header h1 {
-      margin: 0 0 8px;
-      font-size: 1.7rem;
-      letter-spacing: -0.01em;
+      margin: 0 0 6px;
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #f8fafc;
     }
 
     .header p {
       margin: 0;
       color: var(--muted);
-      font-size: 0.94rem;
+      font-size: 0.9rem;
     }
 
     .card {
@@ -372,9 +361,8 @@
 <body>
   <main class="wrapper">
     <div class="header">
-      <div class="shield">🛡️</div>
-      <h1>URL Security Checker</h1>
-      <p>Kiểm tra mức độ an toàn đường dẫn hoặc tra cứu báo cáo đã lưu bằng mã băm SHA-256</p>
+      <h1>URL Security</h1>
+      <p>Kiểm tra mức độ an toàn đường dẫn hoặc tra cứu bản ghi bằng mã băm SHA-256</p>
     </div>
 
     <section class="card">
@@ -398,7 +386,7 @@
 
     <section class="card" id="historySection">
       <div class="history-header">
-        <h3>🗂️ Lịch sử phân tích đã lưu (SHA-256)</h3>
+        <h3>Lịch sử phân tích (SHA-256)</h3>
         <button type="button" class="btn-ghost" onclick="loadHistory()">Làm mới</button>
       </div>
       <div id="historyList" class="history-list">
@@ -478,12 +466,12 @@
       const box = document.getElementById("resultBox");
       const verdict = d.verdict === "LEGITIMATE" ? "LEGITIMATE" : "PHISHING";
       const storageLabel = d.from_cache
-        ? `💾 Đã lưu sẵn (Tra cứu lần ${d.hit_count})`
-        : `✨ Đã phân tích & lưu mới`;
+        ? `Đã lưu · Tra cứu lần ${d.hit_count}`
+        : `Phân tích mới`;
 
       const isHashLookup = /^[a-fA-F0-9]{64}$/.test(rawQuery);
       const reanalyzeBtn = !isHashLookup
-        ? `<button type="button" class="btn-ghost" onclick="reanalyzeCurrent()">🔄 Phân tích lại</button>`
+        ? `<button type="button" class="btn-ghost" onclick="reanalyzeCurrent()">Phân tích lại</button>`
         : "";
 
       const reasonsHtml = (d.reasons || [])
