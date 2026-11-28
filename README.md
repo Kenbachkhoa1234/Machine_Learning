@@ -1,4 +1,4 @@
-# Machine Learning in URL Detection — URL Security Checker (Nhóm 6)
+# Machine Learning in URL Detection — URL Security (Nhóm 6)
 
 Đồ án môn học **Học máy cho bảo mật** — Trường Đại học Công Thương TP.HCM (HUIT)  
 **GVHD:** Hoàng Quốc Việt  
@@ -32,7 +32,8 @@
 - **Kiểm chứng thực nghiệm độc lập**:
   - **10.000 URL Held-Out Test (PhiUSIIL)**: Bắt đúng **9.957 / 10.000 URL (`99,57%`)**, `F1 = 99,495%` — xem [docs/phd_evaluation_report.md](./docs/phd_evaluation_report.md).
   - **56 Kịch bản Thực chiến & OOD**: Đạt **55 / 56 (`98,2%`)**, tăng `+42,8` điểm phần trăm so với mô hình thô (`55,4%`).
-  - **Bộ kiểm thử QA & Red-Team tự động**: **56 / 56 PASS (`100%`)** — xem [docs/qa_test_report.md](./docs/qa_test_report.md).
+  - **Bộ kiểm thử QA, OAuth & Red-Team tự động**: **58 / 58 PASS (`100%`)** — xem [docs/qa_test_report.md](./docs/qa_test_report.md).
+  - **Video Demo có thuyết minh & Slide báo cáo 4 nhóm URL**: Xem trực tiếp tại [docs/Demo_URL_Security_4_Nhom.mp4](./docs/Demo_URL_Security_4_Nhom.mp4) và [docs/Demo_4_Nhom_URL_va_Phuong_Phap_Giai_Quyet.pptx](./docs/Demo_4_Nhom_URL_va_Phuong_Phap_Giai_Quyet.pptx).
 
 ---
 
@@ -41,20 +42,23 @@
 ```text
 .
 ├── app.py                              # FastAPI server (URL check, SHA-256 lookup, CSP headers)
-├── homograph_guard.py                  # Kiểm tra IDN Homograph, IPA, eTLD+1 Typosquat & 10-gate Context
+├── homograph_guard.py                  # IDN Homograph, IPA, eTLD+1 Typosquat, Same-Root OAuth & 10-gate Guard
 ├── security_store.py                   # Lưu trữ SHA-256 chống đụng độ (SQLite WAL) & LRU Rate Limiter
 ├── url_features.py                     # Trích xuất 27 lexical features
 ├── phishing_url_model.pkl              # Mô hình Random Forest đã huấn luyện (scikit-learn 1.6.1)
 ├── model_features.json                 # Metadata thứ tự 27 features
 ├── static/
-│   └── index.html                      # Giao diện Web URL Security Checker
+│   └── index.html                      # Giao diện Web URL Security
 ├── tests/
-│   ├── run_qa_suite.py                 # Bộ 56 test cases tự động (48 URL + 8 Security/Red-Team)
+│   ├── run_qa_suite.py                 # Bộ 58 test cases tự động (50 URL/OAuth + 8 Security/Red-Team)
 │   ├── benchmark_10k_and_ood.py        # Benchmark 10.000 URL Held-Out + 56 ca OOD thực chiến
 │   ├── check_live_demo.py              # Script kiểm tra nhanh server đang chạy tại 127.0.0.1:8000
 │   ├── qa_results.json                 # Kết quả chạy kiểm thử QA
 │   └── phd_benchmark_results.json      # Số liệu thực nghiệm 10.000 URL & OOD
 ├── docs/
+│   ├── Tong_Hop_Toan_Dien_URL_Security_NotebookLM.md # Tài liệu tổng hợp toàn bộ đồ án (A-Z)
+│   ├── Demo_URL_Security_4_Nhom.mp4    # Video Demo 1080p có thuyết minh tiếng Việt
+│   ├── Demo_4_Nhom_URL_va_Phuong_Phap_Giai_Quyet.pptx # Slide báo cáo 4 nhóm URL & phương pháp
 │   ├── phd_evaluation_report.md        # Báo cáo đánh giá thực nghiệm & phân tích giới hạn khoa học
 │   ├── qa_test_report.md               # Báo cáo kiểm thử QA & Red-Team chi tiết
 │   └── demo_screenshot.png             # Ảnh chụp giao diện thực tế
@@ -74,7 +78,7 @@ python app.py
 ```
 
 - Mở trình duyệt tại: `http://127.0.0.1:8000`
-- Chạy bộ kiểm thử QA & Red-Team (56 cases): `python tests/run_qa_suite.py`
+- Chạy bộ kiểm thử QA & Red-Team (58 cases): `python tests/run_qa_suite.py`
 - Chạy kiểm tra trực tiếp server live: `python tests/check_live_demo.py`
 
 ---
